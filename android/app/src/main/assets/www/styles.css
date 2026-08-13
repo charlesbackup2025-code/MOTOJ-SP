@@ -246,3 +246,8 @@ body>.brand strong{font-size:14px!important;color:#fff!important}body>.brand sma
 /* Logo MotoJá fixa no canto inferior esquerdo. */
 body>.brand{left:18px!important;right:auto!important;top:auto!important;bottom:18px!important;z-index:1000!important}
 @media(max-width:560px){body>.brand{left:12px!important;right:auto!important;top:auto!important;bottom:12px!important}}
+
+/* Layout final: sem mapa abaixo de Para onde vamos e botão retangular em largura total. */
+#passengerPanel>#mapPanel,#passengerPanel>#mapPanel.idle-nearby-map{display:none!important}
+#passengerPanel>#passengerIdle:not(.route-open) .where-to-float{display:block!important;width:100%!important;max-width:none!important;border-radius:12px!important;text-align:left!important;margin:10px 0 0!important}
+body>.brand{left:12px!important;right:auto!important;top:auto!important;bottom:12px!important}
