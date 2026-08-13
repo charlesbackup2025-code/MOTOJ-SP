@@ -137,3 +137,6 @@ body.registration-open .home-btn{display:none!important}.brand{top:12px;bottom:a
 /* GPS ao lado dos três endereços salvos, com alto contraste. */
 .saved-addresses .saved-gps{background:#000!important;color:#fff!important;border:1px solid #fff;border-radius:999px;padding:8px 12px;font-size:11px;font-weight:800;min-height:36px}.saved-addresses .saved-gps:hover{background:#333!important}
 .accessibility-note{font-size:12px;line-height:1.4;color:#fff;background:#1d1d1d;border:1px solid #444;border-radius:9px;padding:9px;margin:10px 0 0}
+/* Layout final solicitado: logo inferior esquerda, voz inferior direita e GPS integrado aos atalhos. */
+.brand{left:18px!important;right:auto!important;top:auto!important;bottom:18px!important}.accessibility-voice-btn{right:18px!important;bottom:18px!important}.account-avatar{color:#fff!important}.saved-addresses .saved-gps{background:#171717!important;color:#eee!important;border:1px solid #333!important}.saved-addresses .saved-gps:hover{background:#fff!important;color:#000!important}
+@media(max-width:560px){.brand{left:12px!important;right:auto!important;bottom:12px!important}.accessibility-voice-btn{right:12px!important;bottom:12px!important}}
