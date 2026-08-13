@@ -260,3 +260,11 @@ body>.brand{left:12px!important;right:auto!important;top:auto!important;bottom:1
 #mapPanel.idle-nearby-map .section-heading h2{font-size:12px!important}
 #mapPanel.idle-nearby-map .map-caption{text-align:center!important;font-size:9px!important;margin:4px 0 0!important}
 #mapPanel:not(.idle-nearby-map):not(.ride-map-active){display:none!important}
+
+/* Mini mapa ampliado, centralizado e Suas viagens abaixo dele. */
+#mapPanel.idle-nearby-map{width:min(560px,100%)!important;margin:10px auto 0!important;padding:9px!important}
+#mapPanel.idle-nearby-map #map{height:250px!important;min-height:250px!important;border-radius:11px!important}
+#mapPanel.idle-nearby-map .section-heading h2{font-size:14px!important}
+#mapPanel.idle-nearby-map .map-caption{font-size:10px!important}
+.home-history{order:3!important;margin:10px auto 0!important}
+@media(max-width:560px){#mapPanel.idle-nearby-map #map{height:220px!important;min-height:220px!important}}
