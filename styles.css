@@ -120,3 +120,5 @@ body.registration-open .home-btn{display:none!important}.brand{top:12px;bottom:a
 #passengerPanel.passenger-map-visible #mapPanel{display:block!important;order:-2!important}.route-open .saved-addresses{display:flex}.saved-addresses{align-items:center}.saved-addresses>span{width:100%}.saved-addresses .saved-voice{margin-left:2px}
 /* Solicitação direta: sem mapa e sem etapa Para onde vamos. */
 #passengerPanel #rideForm{display:block!important}.saved-addresses{display:flex!important}.passenger-map-visible #mapPanel{display:none!important}
+/* Campo de destino no estilo de apps de mobilidade, com atalhos logo abaixo. */
+#passengerPanel #rideForm .where-to-btn{display:flex!important;min-height:48px;margin:0 0 8px;background:#fff;color:#000;border:1px solid #444;text-align:left;box-shadow:0 5px 14px #0005}#passengerPanel #rideForm .where-to-btn span{font-size:22px}.route-open .saved-addresses{display:flex!important}.saved-addresses .saved-voice{background:#fff!important;color:#000!important;border:1px solid #000!important;filter:grayscale(1)}
