@@ -1,0 +1,30 @@
+name: Build signed Android AAB
+on:
+  workflow_dispatch:
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/gradle-build-action@v3
+        with: { gradle-version: '8.7' }
+      - name: Create temporary signing key
+        working-directory: android
+        run: |
+          STORE_PASS=$(openssl rand -hex 24)
+          KEY_PASS=$(openssl rand -hex 24)
+          echo "STORE_PASS=$STORE_PASS" >> "$GITHUB_ENV"
+          echo "KEY_PASS=$KEY_PASS" >> "$GITHUB_ENV"
+          keytool -genkeypair -v -keystore motoja-upload-key.jks -storepass "$STORE_PASS" -keypass "$KEY_PASS" -alias motoja-upload -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=MotoJa SP,O=MotoJa,L=Sao Paulo,C=BR"
+          printf 'Keystore: motoja-upload-key.jks\nAlias: motoja-upload\nStore password: %s\nKey password: %s\n' "$STORE_PASS" "$KEY_PASS" > SIGNING_CREDENTIALS.txt
+      - name: Build signed AAB
+        working-directory: android
+        run: gradle --no-daemon --stacktrace :app:bundleRelease -PSIGNING_STORE_FILE=motoja-upload-key.jks -PSIGNING_STORE_PASSWORD="$STORE_PASS" -PSIGNING_KEY_ALIAS=motoja-upload -PSIGNING_KEY_PASSWORD="$KEY_PASS"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MotoJa-SP-signed-release
+          path: |
+            android/app/build/outputs/bundle/release/app-release.aab
+            android/motoja-upload-key.jks
+            android/SIGNING_CREDENTIALS.txt
