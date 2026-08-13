@@ -87,7 +87,7 @@ def init_storage():
         conn.commit()
 
 
-SENSITIVE_PROFILE_FIELDS = {"name", "phone", "email", "cpf", "birth_date", "plate", "background_check_consent_at", "face_consent_at"}
+SENSITIVE_PROFILE_FIELDS = {"name", "username", "phone", "email", "cpf", "birth_date", "plate", "background_check_consent_at", "face_consent_at"}
 SENSITIVE_RIDE_FIELDS = {"origin", "destination", "passenger_id", "driver_id", "passenger_name", "counter_offer_driver_id"}
 SENSITIVE_PAYMENT_FIELDS = {"qr_code", "qr_code_base64", "checkout_url"}
 
@@ -460,7 +460,7 @@ class Handler(SimpleHTTPRequestHandler):
                     profile["account_status"] = status; profile["updated_at"] = now(); write_db(data); return self.send_json(admin_profile(profile))
                 return self.send_json({"error": "Rota administrativa não encontrada"}, 404)
             if parsed.path == "/api/auth/register":
-                name, phone = str(payload.get("name", "")).strip(), str(payload.get("phone", "")).strip()
+                name, username, phone = str(payload.get("name", "")).strip(), re.sub(r"[^a-zA-Z0-9._-]", "", str(payload.get("username", "")).strip().lower()), str(payload.get("phone", "")).strip()
                 pin = str(payload.get("password", payload.get("pin", ""))).strip()
                 role = payload.get("role", "passenger")
                 email = str(payload.get("email", "")).strip().lower()
@@ -469,21 +469,24 @@ class Handler(SimpleHTTPRequestHandler):
                 background_consent = bool(payload.get("background_check_consent"))
                 face_consent = bool(payload.get("face_consent"))
                 plate = re.sub(r"[^A-Za-z0-9]", "", str(payload.get("plate", ""))).upper()
-                if not name or not phone or not valid_password(pin):
-                    return self.send_json({"error": "Nome, celular e senha forte de 8 caracteres são obrigatórios"}, 400)
+                if not name or not phone or not re.fullmatch(r"[a-z0-9._-]{3,30}", username) or not valid_password(pin):
+                    return self.send_json({"error": "Nome, usuário, celular e senha forte são obrigatórios"}, 400)
                 if role == "driver" and (len(cpf) != 11 or len(plate) < 7 or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", birth_date) or not background_consent or not face_consent):
                     return self.send_json({"error": "Motorista precisa informar CPF, placa, data, autorizar antecedentes e reconhecimento facial"}, 400)
                 if role == "passenger" and not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
                     return self.send_json({"error": "Passageiro precisa informar um email válido"}, 400)
+                if any(str(p.get("username", "")).lower() == username for p in data["profiles"]):
+                    return self.send_json({"error": "Nome de usuário já cadastrado"}, 409)
                 if any(p.get("phone") == phone for p in data["profiles"]):
                     return self.send_json({"error": "Celular já cadastrado"}, 409)
                 salt = secrets.token_hex(16)
-                profile = {"id": uuid.uuid4().hex[:12], "name": name, "phone": phone, "email": email or None, "role": role, "cpf": cpf or None, "birth_date": birth_date or None, "plate": plate or None, "background_check_status": "pending_review" if role == "driver" else "not_required", "background_check_consent_at": now() if role == "driver" and background_consent else None, "face_verification_status": "pending_review" if role == "driver" else "not_required", "face_consent_at": now() if role == "driver" and face_consent else None, "verification_status": "pending" if role == "driver" else "not_required", "account_status": "active", "reports_count": 0, "pin_salt": salt, "pin_hash": make_pin_hash(pin, salt), "created_at": now()}
+                profile = {"id": uuid.uuid4().hex[:12], "name": name, "username": username, "phone": phone, "email": email or None, "role": role, "cpf": cpf or None, "birth_date": birth_date or None, "plate": plate or None, "background_check_status": "pending_review" if role == "driver" else "not_required", "background_check_consent_at": now() if role == "driver" and background_consent else None, "face_verification_status": "pending_review" if role == "driver" else "not_required", "face_consent_at": now() if role == "driver" and face_consent else None, "verification_status": "pending" if role == "driver" else "not_required", "account_status": "active", "reports_count": 0, "pin_salt": salt, "pin_hash": make_pin_hash(pin, salt), "created_at": now()}
                 data["profiles"].append(profile); write_db(data)
                 return self.send_json({"token": token_for(profile["id"]), "profile": public_profile(profile)}, 201)
             if parsed.path == "/api/auth/login":
+                username = re.sub(r"[^a-zA-Z0-9._-]", "", str(payload.get("username", "")).strip().lower())
                 phone, pin = str(payload.get("phone", "")).strip(), str(payload.get("password", payload.get("pin", ""))).strip()
-                profile = next((p for p in data["profiles"] if p.get("phone") == phone), None)
+                profile = next((p for p in data["profiles"] if (username and str(p.get("username", "")).lower() == username) or (phone and p.get("phone") == phone)), None)
                 if not profile or not valid_password(pin) or not hmac.compare_digest(profile.get("pin_hash", ""), make_pin_hash(pin, profile.get("pin_salt", ""))):
                     return self.send_json({"error": "Celular ou senha inválida"}, 401)
                 profile.setdefault("verification_status", "not_required" if profile.get("role") != "driver" else "pending")
