@@ -23,3 +23,5 @@
 @media(max-width:560px){.actions button{min-width:0;flex:1 1 46%}}
 
 .profile-btn{width:auto;padding:0 12px;font-size:12px;font-weight:800;white-space:nowrap}.driver-head-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.driver-head-actions .secondary{padding:9px 11px;font-size:12px}@media(max-width:560px){.profile-btn{padding:0 9px;font-size:11px}.driver-head-actions{width:100%;justify-content:space-between}.driver-head-actions .status-toggle{flex:1;justify-content:center}}
+
+.consent{display:flex;align-items:flex-start;gap:9px;font-size:12px;line-height:1.4;color:#333;margin:12px 0}.consent input{width:17px;height:17px;accent-color:#000;flex:0 0 auto;margin-top:1px}.driver-only-field .profile-chip{margin-top:0}
