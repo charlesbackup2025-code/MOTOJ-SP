@@ -129,16 +129,34 @@ def _encrypt_file(raw):
     nonce = secrets.token_bytes(12)
     return b"MOTOJA1" + nonce + _cipher().encrypt(nonce, raw, None)
 
+def _needs_encryption(data):
+    if not ENCRYPTION_KEY: return False
+    for profile in data.get("profiles", []):
+        for field in SENSITIVE_PROFILE_FIELDS:
+            value=profile.get(field)
+            if value is not None and not (isinstance(value, str) and value.startswith("enc$")): return True
+        for doc in profile.get("documents", []):
+            if any(doc.get(field) and not str(doc.get(field)).startswith("enc$") for field in ("filename", "stored")): return True
+    for ride in data.get("rides", []):
+        if any(ride.get(field) and not str(ride.get(field)).startswith("enc$") for field in SENSITIVE_RIDE_FIELDS): return True
+    return False
+
+
 def read_db():
     if STORAGE == "json":
         if not DB.exists(): return {"profiles": [], "rides": []}
-        try: return _protect_data(json.loads(DB.read_text(encoding="utf-8")), encrypt=False)
+        try:
+            raw_data=json.loads(DB.read_text(encoding="utf-8")); data=_protect_data(raw_data, encrypt=False)
+            if _needs_encryption(raw_data): write_db(data)
+            return data
         except (ValueError, OSError): return {"profiles": [], "rides": []}
     init_storage()
     with sqlite3.connect(SQLITE_FILE) as conn:
         profiles=[json.loads(row[0]) for row in conn.execute("SELECT payload FROM profiles")]
         rides=[json.loads(row[0]) for row in conn.execute("SELECT payload FROM rides ORDER BY rowid DESC")]
-    return {"profiles": profiles, "rides": rides}
+    raw_data={"profiles": profiles, "rides": rides}; data=_protect_data(raw_data, encrypt=False)
+    if _needs_encryption(raw_data): write_db(data)
+    return data
 
 
 def write_db(data):
