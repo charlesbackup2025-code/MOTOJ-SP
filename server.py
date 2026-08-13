@@ -88,7 +88,7 @@ def init_storage():
 
 
 SENSITIVE_PROFILE_FIELDS = {"name", "phone", "email", "cpf", "birth_date", "plate", "background_check_consent_at", "face_consent_at"}
-SENSITIVE_RIDE_FIELDS = {"origin", "destination", "passenger_id", "driver_id"}
+SENSITIVE_RIDE_FIELDS = {"origin", "destination", "passenger_id", "driver_id", "passenger_name", "counter_offer_driver_id"}
 SENSITIVE_PAYMENT_FIELDS = {"qr_code", "qr_code_base64", "checkout_url"}
 
 def _cipher():
@@ -509,6 +509,27 @@ class Handler(SimpleHTTPRequestHandler):
                 data["rides"].insert(0, ride)
                 write_db(data)
                 return self.send_json(ride, 201)
+            counter_match = re.fullmatch(r"/api/rides/([A-Za-z0-9]+)/counter-offer(?:/(accept|reject))?", parsed.path)
+            if counter_match:
+                ride_id, counter_action = counter_match.groups(); ride=next((r for r in data["rides"] if r["id"]==ride_id),None)
+                if not ride: return self.send_json({"error":"Corrida não encontrada"},404)
+                session_id=session_profile_id(self); profile=next((p for p in data["profiles"] if p.get("id")==session_id),None)
+                if ride.get("ride_type") != "negotiate": return self.send_json({"error":"Esta corrida não aceita negociação"},400)
+                if counter_action is None:
+                    if not profile or profile.get("role")!="driver" or profile.get("verification_status")!="approved" or profile.get("account_status")!="active": return self.send_json({"error":"Motorista não habilitado"},403)
+                    if ride.get("status")!="searching": return self.send_json({"error":"Corrida não está disponível"},409)
+                    try: offered=float(payload.get("price"))
+                    except (TypeError,ValueError): return self.send_json({"error":"Informe um valor válido"},400)
+                    if offered < MIN_FARE or offered > 1000: return self.send_json({"error":"Valor fora do limite permitido"},400)
+                    ride["counter_offer_price"]=round(offered,2); ride["counter_offer_driver_id"]=session_id; ride["counter_offer_at"]=now(); ride["updated_at"]=now(); notify_profile(data,ride.get("passenger_id"),"Nova proposta de corrida",f"O motorista sugeriu R$ {offered:.2f}.")
+                elif counter_action == "accept":
+                    if not profile or session_id != ride.get("passenger_id"): return self.send_json({"error":"Acesso negado"},403)
+                    if not ride.get("counter_offer_price") or not ride.get("counter_offer_driver_id"): return self.send_json({"error":"Nenhuma proposta pendente"},409)
+                    ride["price"]=float(ride["counter_offer_price"]); ride["driver_id"]=ride["counter_offer_driver_id"]; ride["status"]="accepted"; ride["updated_at"]=now(); notify_profile(data,ride.get("driver_id"),"Proposta aceita","O passageiro aceitou sua proposta.")
+                else:
+                    if not profile or session_id != ride.get("passenger_id"): return self.send_json({"error":"Acesso negado"},403)
+                    ride["counter_offer_price"]=None; ride["counter_offer_driver_id"]=None; ride["counter_offer_at"]=None; ride["updated_at"]=now()
+                write_db(data); return self.send_json(ride)
             match = re.fullmatch(r"/api/rides/([A-Za-z0-9]+)/([a-z]+)", parsed.path)
             if match:
                 ride_id, action = match.groups()
