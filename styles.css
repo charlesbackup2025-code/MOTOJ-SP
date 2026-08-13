@@ -128,3 +128,5 @@ body.registration-open .home-btn{display:none!important}.brand{top:12px;bottom:a
 #passengerPanel #rideForm .where-to-btn{background:#000!important;color:#fff!important;border:1px solid #444!important;min-height:58px;padding:8px 10px 8px 16px;box-shadow:0 8px 20px #0008;gap:12px}.where-to-label{font-size:16px;font-weight:800}.where-to-voice{display:grid!important;place-items:center;width:42px;height:42px;min-width:42px;border-radius:50%;background:#fff!important;color:#000!important;border:1px solid #bbb;font-size:20px;line-height:1;box-shadow:0 4px 12px #000b;transition:transform .15s,filter .15s}.where-to-voice:hover{filter:brightness(.9);transform:translateY(-1px)}.where-to-voice:active{transform:scale(.94)}
 /* Microfone lateral monocromático: branco e preto, sem o microfone nos endereços salvos. */
 .where-to-voice{filter:grayscale(1)!important;background:#fff!important;color:#000!important}.where-to-voice:hover{filter:grayscale(1) brightness(.9)!important}
+/* Contraste solicitado */
+#passengerPanel #rideForm .where-to-btn,.where-to-label{color:#fff!important}#profileSubmit,#profileSubmit span{color:#000!important}
