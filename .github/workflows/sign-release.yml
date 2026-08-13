@@ -13,7 +13,7 @@ jobs:
         working-directory: android
         run: |
           STORE_PASS=$(openssl rand -hex 24)
-          KEY_PASS=$(openssl rand -hex 24)
+          KEY_PASS=$STORE_PASS
           echo "STORE_PASS=$STORE_PASS" >> "$GITHUB_ENV"
           echo "KEY_PASS=$KEY_PASS" >> "$GITHUB_ENV"
           keytool -genkeypair -v -keystore motoja-upload-key.jks -storepass "$STORE_PASS" -keypass "$KEY_PASS" -alias motoja-upload -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=MotoJa SP,O=MotoJa,L=Sao Paulo,C=BR"
