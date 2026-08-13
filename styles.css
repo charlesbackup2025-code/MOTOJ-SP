@@ -76,3 +76,4 @@ body.registration-open.driver-profile-mode .profile-panel{max-width:460px;paddin
 
 .registration-login-btn{font-size:13px;font-weight:600;letter-spacing:.01em;white-space:nowrap}
 body.login-open #profileNameField,body.login-open #profilePhoneField{display:none!important}
+.recovery-box{margin-top:10px;padding:12px;border:1px solid #333;border-radius:10px;background:#151515}.recovery-box .profile-chip{margin-top:8px}.recovery-box .secondary{width:100%}
