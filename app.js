@@ -23,7 +23,7 @@ function notify(title,body){ if('Notification' in window && Notification.permiss
 function decodeVapid(value){const pad='='.repeat((4-value.length%4)%4);const raw=atob((value+pad).replace(/-/g,'+').replace(/_/g,'/'));return Uint8Array.from([...raw].map(c=>c.charCodeAt(0)));}
 async function subscribePush(){if(!state.apiToken||!state.profile?.id||!('serviceWorker' in navigator)||!('PushManager' in window))return false;const config=await api('/push/config');if(!config.enabled||!config.vapid_public_key)return false;const registration=await navigator.serviceWorker.ready;const subscription=await registration.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:decodeVapid(config.vapid_public_key)});await api(`/profiles/${state.profile.id}/push-subscription`,{method:'POST',body:JSON.stringify({subscription:subscription.toJSON()})});return true;}
 function updateMap(coords, driverCoords){
-  if(!coords) return;
+  if(mode!=='passenger'||!state.ride||!coords) return;
   const panel=$('#mapPanel'); if(!panel) return; panel.classList.remove('hidden');
   if(typeof L==='undefined'){ $('#mapCaption').textContent=`Sua localização: ${coords.lat.toFixed(5)}, ${coords.lng.toFixed(5)}`; return; }
   if(!map){ map=L.map('map',{zoomControl:true}).setView([coords.lat,coords.lng],14); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map); }
