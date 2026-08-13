@@ -148,3 +148,14 @@ body.registration-open .home-btn{display:none!important}.brand{top:12px;bottom:a
 /* A logo fica fora do cabeçalho sticky para nunca desaparecer ao rolar. */
 body>.brand{position:fixed!important;left:18px!important;right:auto!important;top:auto!important;bottom:18px!important;z-index:100!important;display:flex!important;opacity:1!important;visibility:visible!important;transform:none!important;pointer-events:auto!important}
 @media(max-width:560px){body>.brand{left:12px!important;bottom:12px!important}}
+/* Mapa de rota abaixo dos endereços salvos, com visual escuro de navegação. */
+#passengerIdle.route-open #mapPanel{display:block!important;order:initial!important;margin:12px 0 0!important;padding:12px!important;background:#0b0b0b!important;border:1px solid #292929!important;border-radius:16px!important}
+#passengerIdle.route-open #mapPanel #map{height:300px!important;border-radius:12px!important;overflow:hidden;background:#111!important}
+#passengerIdle.route-open #mapPanel .section-heading{margin:0 0 9px!important}
+#passengerIdle.route-open #mapPanel .section-heading h2{font-size:16px!important}
+#passengerIdle.route-open #mapPanel .map-caption{margin:8px 2px 0!important;color:#aaa!important;font-size:11px!important}
+#passengerIdle.route-open #mapPanel .leaflet-tile-pane{filter:brightness(.42) saturate(.7) contrast(1.05)}
+#passengerIdle.route-open #mapPanel .leaflet-control-zoom a{background:#111!important;color:#fff!important;border-color:#333!important}
+#passengerIdle.route-open #mapPanel .leaflet-control-attribution{background:#111c!important;color:#999!important}
+#passengerIdle.route-open #mapPanel .leaflet-control-attribution a{color:#bbb!important}
+@media(max-width:560px){#passengerIdle.route-open #mapPanel #map{height:260px!important}}
