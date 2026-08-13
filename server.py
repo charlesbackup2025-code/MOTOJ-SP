@@ -186,11 +186,14 @@ def write_db(data):
 
 
 def public_profile(profile):
-    return {k: v for k, v in profile.items() if k not in {"pin_salt", "pin_hash", "cpf", "birth_date", "background_check_consent_at", "face_consent_at"}}
+    return {k: v for k, v in profile.items() if k not in {"pin_salt", "pin_hash", "cpf", "birth_date", "phone", "email", "plate", "documents", "push_subscriptions", "background_check_consent_at", "face_consent_at"}}
 
 
 def admin_profile(profile):
     result = public_profile(profile)
+    result["phone"] = profile.get("phone")
+    result["email"] = profile.get("email")
+    result["plate"] = profile.get("plate")
     cpf = str(profile.get("cpf", ""))
     result["cpf_masked"] = ("***.***." + cpf[-5:-2] + "-" + cpf[-2:]) if len(cpf) >= 5 else "não informado"
     result["documents"] = [{k: d.get(k) for k in ("id", "kind", "filename", "status", "created_at")} for d in profile.get("documents", [])]
@@ -317,14 +320,23 @@ class Handler(SimpleHTTPRequestHandler):
             if parsed.path == "/api/health":
                 return self.send_json({"ok": True, "service": "motoja-sp", "time": now()})
             if parsed.path == "/api/rides":
+                session_id=session_profile_id(self)
+                if not session_id: return self.send_json({"error": "Sessão obrigatória"}, 401)
                 rides = data["rides"]
                 if query.get("status"):
                     rides = [r for r in rides if r["status"] in query["status"]]
                 if query.get("passenger_id"):
-                    rides = [r for r in rides if r["passenger_id"] == query["passenger_id"][0]]
+                    if query["passenger_id"][0] != session_id: return self.send_json({"error": "Acesso negado"}, 403)
+                    rides = [r for r in rides if r["passenger_id"] == session_id]
+                elif query.get("status") and "searching" in query["status"]:
+                    profile=next((p for p in data["profiles"] if p.get("id")==session_id),None)
+                    if not profile or profile.get("role") != "driver": return self.send_json({"error": "Acesso de motorista obrigatório"}, 403)
                 return self.send_json({"rides": rides})
             if parsed.path == "/api/profiles":
-                return self.send_json({"profiles": [public_profile(p) for p in data["profiles"]]})
+                session_id=session_profile_id(self)
+                if not session_id: return self.send_json({"error": "Sessão obrigatória"}, 401)
+                profile=next((p for p in data["profiles"] if p.get("id")==session_id),None)
+                return self.send_json({"profiles": [public_profile(profile)] if profile else []})
         return self.send_json({"error": "Rota não encontrada"}, 404)
 
     def do_POST(self):
@@ -351,6 +363,7 @@ class Handler(SimpleHTTPRequestHandler):
             if payment_match:
                 ride = next((r for r in data["rides"] if r["id"] == payment_match.group(1)), None); method = payload.get("method", "pix")
                 if not ride: return self.send_json({"error": "Corrida não encontrada"}, 404)
+                if session_profile_id(self) != ride.get("passenger_id"): return self.send_json({"error": "Acesso negado"}, 403)
                 if method == "cash": result={"provider":"local","status":"pay_on_trip","method":"cash"}
                 elif method == "pix": result=create_pix(ride.get("price",0),f"MotoJá {ride['id']}",payload.get("email"))
                 else: result=create_preference(ride.get("price",0),f"MotoJá {ride['id']}")
@@ -449,6 +462,7 @@ class Handler(SimpleHTTPRequestHandler):
                 required = ("passenger_id", "origin", "destination", "distance")
                 if any(not payload.get(key) for key in required):
                     return self.send_json({"error": "Dados da corrida incompletos"}, 400)
+                if session_profile_id(self) != str(payload.get("passenger_id")): return self.send_json({"error": "Sessão inválida"}, 401)
                 distance = float(payload["distance"]); ride_type = payload.get("ride_type", "moto"); rate = RIDE_RATES.get(ride_type, 1.0)
                 passenger = next((p for p in data["profiles"] if p.get("id") == payload["passenger_id"]), None) or {}
                 passenger_rating = float(passenger.get("rating_average") or 0)
