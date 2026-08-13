@@ -60,6 +60,7 @@ def ride_price(distance, ride_type="moto", negotiated=0):
     base=MIN_FARE if distance <= 2 else distance * PER_KM
     if ride_type in ("economy", "moto"): return round(base, 2)
     if ride_type == "priority": return round(base + 8, 2)
+    if ride_type == "delivery": return round(base, 2)
     if ride_type == "negotiate": return round(max(base + 8, float(negotiated or 0)), 2)
     return round(base + 4, 2)
 
@@ -523,7 +524,7 @@ class Handler(SimpleHTTPRequestHandler):
                     return self.send_json({"error": "Dados da corrida incompletos"}, 400)
                 if session_profile_id(self) != str(payload.get("passenger_id")): return self.send_json({"error": "Sessão inválida"}, 401)
                 distance = float(payload["distance"]); ride_type = payload.get("ride_type", "moto"); negotiated_price = float(payload.get("negotiated_price") or 0);
-                if ride_type not in {"moto", "priority", "economy", "negotiate"}: ride_type="moto"
+                if ride_type not in {"moto", "priority", "economy", "negotiate", "delivery"}: ride_type="moto"
                 passenger = next((p for p in data["profiles"] if p.get("id") == payload["passenger_id"]), None) or {}
                 passenger_rating = float(passenger.get("rating_average") or 0)
                 passenger_rating_count = int(passenger.get("rating_count") or 0)
