@@ -26,3 +26,11 @@
 
 .consent{display:flex;align-items:flex-start;gap:9px;font-size:12px;line-height:1.4;color:#333;margin:12px 0}.consent input{width:17px;height:17px;accent-color:#000;flex:0 0 auto;margin-top:1px}.driver-only-field .profile-chip{margin-top:0}
 .face-note{font-size:11px;color:#777}
+
+/* Cadastro em tela separada da chamada de corrida */
+body.registration-open .app-shell{max-width:720px}
+body.registration-open #passengerPanel,body.registration-open #driverPanel,body.registration-open #paymentPanel,body.registration-open #ratingPanel,body.registration-open #historyPanel,body.registration-open .trust-row,body.registration-open .demo-note{display:none!important}
+body.registration-open .profile-panel{display:block!important;max-width:680px;margin:10px auto 0;border-radius:16px}
+body.registration-open .hero{padding-bottom:12px}
+body.registration-open .hero h1{font-size:32px}
+@media(max-width:560px){body.registration-open .profile-panel{margin-top:0;padding:18px}body.registration-open .hero h1{font-size:28px}}
