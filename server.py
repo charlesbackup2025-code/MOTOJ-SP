@@ -52,11 +52,25 @@ ENCRYPTION_KEY = os.getenv("MOTOJA_ENCRYPTION_KEY", "")
 LOCK = threading.Lock()
 SESSIONS = {}
 PBKDF2_ROUNDS = 180_000
-RIDE_RATES = {"moto": 1.0, "priority": 1.25, "economy": 0.84}
+MIN_FARE = 7.0
+PER_KM = 1.50
+
+def ride_price(distance, ride_type="moto", negotiated=0):
+    base=max(MIN_FARE, float(distance or 1) * PER_KM)
+    if ride_type == "economy": return round(base, 2)
+    if ride_type == "priority": return round(base + 8, 2)
+    if ride_type == "negotiate": return round(max(base + 8, float(negotiated or 0)), 2)
+    return round(base + 4, 2)
+
 
 
 def now():
     return datetime.now(timezone.utc).isoformat()
+
+
+def is_recent(timestamp, seconds=60):
+    try: return (datetime.now(timezone.utc)-datetime.fromisoformat(str(timestamp).replace("Z","+00:00"))).total_seconds() <= seconds
+    except Exception: return False
 
 
 def haversine_km(lat1, lon1, lat2, lon2):
@@ -319,6 +333,21 @@ class Handler(SimpleHTTPRequestHandler):
                 return self.send_json({"mercado_pago_public_key": MP_PUBLIC_KEY, "enabled": bool(MP_PUBLIC_KEY)})
             if parsed.path == "/api/health":
                 return self.send_json({"ok": True, "service": "motoja-sp", "time": now()})
+            if parsed.path == "/api/drivers/nearby":
+                session_id=session_profile_id(self)
+                if not session_id: return self.send_json({"error": "Sessão obrigatória"}, 401)
+                passenger=next((p for p in data["profiles"] if p.get("id")==session_id),None)
+                if not passenger or passenger.get("role") != "passenger": return self.send_json({"error": "Acesso de passageiro obrigatório"}, 403)
+                try: lat=float(query.get("lat",[""])[0]); lng=float(query.get("lng",[""])[0])
+                except (TypeError,ValueError): return self.send_json({"error": "Localização inválida"}, 400)
+                drivers=[]
+                for driver in data["profiles"]:
+                    if driver.get("role")!="driver" or driver.get("verification_status")!="approved" or driver.get("account_status")!="active" or not driver.get("online") or not is_recent(driver.get("last_seen"),60): continue
+                    if driver.get("last_lat") is None or driver.get("last_lng") is None: continue
+                    distance=haversine_km(lat,lng,driver["last_lat"],driver["last_lng"])
+                    if distance<=15: drivers.append({"id":driver["id"],"lat":driver["last_lat"],"lng":driver["last_lng"],"distance_km":round(distance,2),"rating_average":driver.get("rating_average",0)})
+                drivers.sort(key=lambda item:item["distance_km"])
+                return self.send_json({"drivers":drivers[:30]})
             if parsed.path == "/api/rides":
                 session_id=session_profile_id(self)
                 if not session_id: return self.send_json({"error": "Sessão obrigatória"}, 401)
@@ -381,6 +410,14 @@ class Handler(SimpleHTTPRequestHandler):
                 profile["push_subscriptions"] = [s for s in profile["push_subscriptions"] if s.get("endpoint") != subscription.get("endpoint")]
                 profile["push_subscriptions"].append(subscription); write_db(data)
                 return self.send_json({"ok": True}, 201)
+            if parsed.path == "/api/drivers/location":
+                driver_id=session_profile_id(self); driver=next((p for p in data["profiles"] if p.get("id")==driver_id),None)
+                if not driver or driver.get("role")!="driver": return self.send_json({"error": "Acesso de motorista obrigatório"}, 403)
+                try: lat=float(payload.get("lat")); lng=float(payload.get("lng"))
+                except (TypeError,ValueError): return self.send_json({"error": "Localização inválida"}, 400)
+                if not (-90<=lat<=90 and -180<=lng<=180): return self.send_json({"error": "Localização inválida"}, 400)
+                driver["last_lat"]=lat; driver["last_lng"]=lng; driver["online"]=bool(payload.get("online")); driver["last_seen"]=now(); write_db(data)
+                return self.send_json({"ok":True,"online":driver["online"]})
             doc_match = re.fullmatch(r"/api/profiles/([A-Za-z0-9]+)/documents", parsed.path)
             if doc_match:
                 profile_id = session_profile_id(self)
@@ -463,11 +500,12 @@ class Handler(SimpleHTTPRequestHandler):
                 if any(not payload.get(key) for key in required):
                     return self.send_json({"error": "Dados da corrida incompletos"}, 400)
                 if session_profile_id(self) != str(payload.get("passenger_id")): return self.send_json({"error": "Sessão inválida"}, 401)
-                distance = float(payload["distance"]); ride_type = payload.get("ride_type", "moto"); rate = RIDE_RATES.get(ride_type, 1.0)
+                distance = float(payload["distance"]); ride_type = payload.get("ride_type", "moto"); negotiated_price = float(payload.get("negotiated_price") or 0);
+                if ride_type not in {"moto", "priority", "economy", "negotiate"}: ride_type="moto"
                 passenger = next((p for p in data["profiles"] if p.get("id") == payload["passenger_id"]), None) or {}
                 passenger_rating = float(passenger.get("rating_average") or 0)
                 passenger_rating_count = int(passenger.get("rating_count") or 0)
-                ride = {"id": uuid.uuid4().hex[:12], "passenger_id": payload["passenger_id"], "passenger_name": passenger.get("name", "Passageiro"), "passenger_rating": passenger_rating, "passenger_rating_count": passenger_rating_count, "driver_id": None, "origin": payload["origin"], "destination": payload["destination"], "distance": distance, "ride_type": ride_type, "price": round(max(8, (6.5 + distance * 1.56) * rate), 2), "eta_minutes": max(7, round(distance * 3)), "payment_method": payload.get("payment_method", "pix"), "rating": None, "status": "searching", "created_at": now(), "updated_at": now()}
+                ride = {"id": uuid.uuid4().hex[:12], "passenger_id": payload["passenger_id"], "passenger_name": passenger.get("name", "Passageiro"), "passenger_rating": passenger_rating, "passenger_rating_count": passenger_rating_count, "driver_id": None, "origin": payload["origin"], "destination": payload["destination"], "distance": distance, "ride_type": ride_type, "negotiated_price": negotiated_price, "price": ride_price(distance, ride_type, negotiated_price), "eta_minutes": max(7, round(distance * 3)), "payment_method": payload.get("payment_method", "pix"), "rating": None, "status": "searching", "created_at": now(), "updated_at": now()}
                 data["rides"].insert(0, ride)
                 write_db(data)
                 return self.send_json(ride, 201)
