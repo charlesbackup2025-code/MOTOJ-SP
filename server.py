@@ -339,7 +339,10 @@ class Handler(SimpleHTTPRequestHandler):
                 if any(not payload.get(key) for key in required):
                     return self.send_json({"error": "Dados da corrida incompletos"}, 400)
                 distance = float(payload["distance"]); ride_type = payload.get("ride_type", "moto"); rate = RIDE_RATES.get(ride_type, 1.0)
-                ride = {"id": uuid.uuid4().hex[:12], "passenger_id": payload["passenger_id"], "driver_id": None, "origin": payload["origin"], "destination": payload["destination"], "distance": distance, "ride_type": ride_type, "price": round(max(8, (6.5 + distance * 1.56) * rate), 2), "eta_minutes": max(7, round(distance * 3)), "payment_method": payload.get("payment_method", "pix"), "rating": None, "status": "searching", "created_at": now(), "updated_at": now()}
+                passenger = next((p for p in data["profiles"] if p.get("id") == payload["passenger_id"]), None) or {}
+                passenger_rating = float(passenger.get("rating_average") or 0)
+                passenger_rating_count = int(passenger.get("rating_count") or 0)
+                ride = {"id": uuid.uuid4().hex[:12], "passenger_id": payload["passenger_id"], "passenger_name": passenger.get("name", "Passageiro"), "passenger_rating": passenger_rating, "passenger_rating_count": passenger_rating_count, "driver_id": None, "origin": payload["origin"], "destination": payload["destination"], "distance": distance, "ride_type": ride_type, "price": round(max(8, (6.5 + distance * 1.56) * rate), 2), "eta_minutes": max(7, round(distance * 3)), "payment_method": payload.get("payment_method", "pix"), "rating": None, "status": "searching", "created_at": now(), "updated_at": now()}
                 data["rides"].insert(0, ride)
                 write_db(data)
                 return self.send_json(ride, 201)
