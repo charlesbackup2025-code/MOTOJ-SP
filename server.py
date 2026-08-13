@@ -459,6 +459,16 @@ class Handler(SimpleHTTPRequestHandler):
                     if not profile or status not in {"active", "suspended"}: return self.send_json({"error": "Perfil ou status inválido"}, 400)
                     profile["account_status"] = status; profile["updated_at"] = now(); write_db(data); return self.send_json(admin_profile(profile))
                 return self.send_json({"error": "Rota administrativa não encontrada"}, 404)
+            if parsed.path == "/api/auth/recover":
+                method=str(payload.get("method", "email")); identifier=str(payload.get("identifier", "")).strip(); username=re.sub(r"[^a-zA-Z0-9._-]", "", str(payload.get("username", "")).strip().lower())
+                if method not in {"email", "face"} or not identifier: return self.send_json({"error": "Dados de recuperação incompletos"}, 400)
+                if method == "email" and not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", identifier): return self.send_json({"error": "Email inválido"}, 400)
+                if method == "face":
+                    try:
+                        raw=base64.b64decode(identifier, validate=True)
+                        if len(raw)>5_000_000: return self.send_json({"error": "Selfie muito grande"}, 400)
+                    except (ValueError, base64.binascii.Error): return self.send_json({"error": "Selfie inválida"}, 400)
+                return self.send_json({"ok":True,"message":"Solicitação registrada. A análise de recuperação será concluída pela equipe responsável."},202)
             if parsed.path == "/api/auth/register":
                 name, username, phone = str(payload.get("name", "")).strip(), re.sub(r"[^a-zA-Z0-9._-]", "", str(payload.get("username", "")).strip().lower()), str(payload.get("phone", "")).strip()
                 pin = str(payload.get("password", payload.get("pin", ""))).strip()
