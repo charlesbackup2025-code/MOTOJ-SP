@@ -77,3 +77,6 @@ body.registration-open.driver-profile-mode .profile-panel{max-width:460px;paddin
 .registration-login-btn{font-size:13px;font-weight:600;letter-spacing:.01em;white-space:nowrap}
 body.login-open #profileNameField,body.login-open #profilePhoneField{display:none!important}
 .recovery-box{margin-top:10px;padding:12px;border:1px solid #333;border-radius:10px;background:#151515}.recovery-box .profile-chip{margin-top:8px}.recovery-box .secondary{width:100%}
+
+/* Proporções finais e tipografia uniforme */
+body.registration-open:not(.driver-profile-mode) .profile-panel{max-width:560px;padding:16px}body.registration-open.driver-profile-mode .profile-panel{max-width:620px;padding:20px}body.registration-open .profile-panel .field span{font-size:12px;margin-bottom:6px}body.registration-open .profile-panel .field input,body.registration-open .profile-panel .field select{height:42px;padding:10px 12px;font-size:13px}body.registration-open .profile-panel .consent{font-size:11px}body.registration-open .profile-panel .profile-chip{font-size:11px}@media(max-width:560px){body.registration-open:not(.driver-profile-mode) .profile-panel{padding:14px}body.registration-open.driver-profile-mode .profile-panel{padding:14px}body.registration-open .profile-panel .field input{height:40px}}
