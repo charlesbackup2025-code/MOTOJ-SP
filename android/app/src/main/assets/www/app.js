@@ -73,7 +73,9 @@ function renderDriver(){
   }
 }
 function renderAll(){renderProfile();renderPassenger();renderDriver();renderHistory();renderPayment();}
-document.querySelectorAll('.mode').forEach(btn=>btn.onclick=()=>{mode=btn.dataset.mode;document.querySelectorAll('.mode').forEach(b=>{const on=b===btn;b.classList.toggle('active',on);b.setAttribute('aria-selected',on)});$('#passengerPanel').classList.toggle('hidden',mode!=='passenger');$('#driverPanel').classList.toggle('hidden',mode!=='driver');$('#heroTitle').textContent=mode==='passenger'?'Chegue mais rápido.':'Ganhe dirigindo.';$('#heroText').textContent=mode==='passenger'?'Peça uma moto em poucos passos e acompanhe sua corrida.':'Fique online e encontre passageiros perto de você.';renderProfile();renderDriver();});
+function setMode(next){mode=next;document.querySelectorAll('.mode').forEach(b=>{const on=b.dataset.mode===mode;b.classList.toggle('active',on);b.setAttribute('aria-selected',on)});$('#passengerPanel').classList.toggle('hidden',mode!=='passenger');$('#driverPanel').classList.toggle('hidden',mode!=='driver');$('#heroTitle').textContent=mode==='passenger'?'Chegue mais rápido.':'Ganhe dirigindo.';$('#heroText').textContent=mode==='passenger'?'Peça uma moto em poucos passos e acompanhe sua corrida.':'Fique online e encontre passageiros perto de você.';renderProfile();renderDriver();}
+document.querySelectorAll('.mode').forEach(btn=>btn.onclick=()=>setMode(btn.dataset.mode));
+$('#passengerModeBtn').onclick=()=>setMode('passenger');
 document.querySelectorAll('[data-ride-type]').forEach(btn=>btn.onclick=()=>{rideType=btn.dataset.rideType;document.querySelectorAll('.ride-option').forEach(b=>b.classList.toggle('active',b===btn));refreshEstimate();});
 document.querySelectorAll('[data-quick-destination]').forEach(btn=>btn.onclick=()=>{$('#destination').value=btn.dataset.quickDestination;toast(`Destino selecionado: ${btn.dataset.quickDestination}`);});
 $('#profileBtn').onclick=()=>$('#profilePanel').classList.toggle('hidden');
