@@ -357,6 +357,11 @@ class Handler(SimpleHTTPRequestHandler):
                 if query.get("passenger_id"):
                     if query["passenger_id"][0] != session_id: return self.send_json({"error": "Acesso negado"}, 403)
                     rides = [r for r in rides if r["passenger_id"] == session_id]
+                if query.get("driver_id"):
+                    if query["driver_id"][0] != session_id: return self.send_json({"error": "Acesso negado"}, 403)
+                    profile=next((p for p in data["profiles"] if p.get("id")==session_id),None)
+                    if not profile or profile.get("role") != "driver": return self.send_json({"error": "Acesso de motorista obrigatório"}, 403)
+                    rides = [r for r in rides if r.get("driver_id") == session_id]
                 elif query.get("status") and "searching" in query["status"]:
                     profile=next((p for p in data["profiles"] if p.get("id")==session_id),None)
                     if not profile or profile.get("role") != "driver": return self.send_json({"error": "Acesso de motorista obrigatório"}, 403)
