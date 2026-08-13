@@ -118,3 +118,5 @@ body.registration-open .home-btn{display:none!important}.brand{top:12px;bottom:a
 .route-open .where-to-btn{display:none}.passenger-map-visible #mapPanel{order:-2!important}.passenger-map-visible #mapPanel .map-caption{font-size:10px}
 /* O mapa só aparece depois que o passageiro avança em Para onde vamos. */
 #passengerPanel.passenger-map-visible #mapPanel{display:block!important;order:-2!important}.route-open .saved-addresses{display:flex}.saved-addresses{align-items:center}.saved-addresses>span{width:100%}.saved-addresses .saved-voice{margin-left:2px}
+/* Solicitação direta: sem mapa e sem etapa Para onde vamos. */
+#passengerPanel #rideForm{display:block!important}.saved-addresses{display:flex!important}.passenger-map-visible #mapPanel{display:none!important}
