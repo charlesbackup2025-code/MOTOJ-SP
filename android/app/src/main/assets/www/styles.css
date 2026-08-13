@@ -130,3 +130,5 @@ body.registration-open .home-btn{display:none!important}.brand{top:12px;bottom:a
 .where-to-voice{filter:grayscale(1)!important;background:#fff!important;color:#000!important}.where-to-voice:hover{filter:grayscale(1) brightness(.9)!important}
 /* Contraste solicitado */
 #passengerPanel #rideForm .where-to-btn,.where-to-label{color:#fff!important}#profileSubmit,#profileSubmit span{color:#000!important}
+/* Mapa de motoristas visível acima do painel de espera da solicitação. */
+#passengerPanel.passenger-map-active #mapPanel{display:block!important;order:-1!important;margin:0 0 10px}.passenger-map-active #mapPanel #map{height:220px}.passenger-map-active #mapPanel .map-caption{font-size:10px}.passenger-map-active #passengerActive{order:1}.passenger-map-active #mapPanel .section-heading{margin-bottom:6px}
