@@ -89,7 +89,7 @@ def init_storage():
 
 SENSITIVE_PROFILE_FIELDS = {"name", "username", "phone", "email", "cpf", "birth_date", "plate", "background_check_consent_at", "face_consent_at"}
 SENSITIVE_RIDE_FIELDS = {"origin", "destination", "passenger_id", "driver_id", "passenger_name", "counter_offer_driver_id"}
-SENSITIVE_PAYMENT_FIELDS = {"qr_code", "qr_code_base64", "checkout_url"}
+SENSITIVE_PAYMENT_FIELDS = {"qr_code", "qr_code_base64", "checkout_url", "method"}
 
 def _cipher():
     if not AESGCM or not ENCRYPTION_KEY:
@@ -560,13 +560,17 @@ class Handler(SimpleHTTPRequestHandler):
                 if action == "accept":
                     driver_id = payload.get("driver_id", "demo-driver"); driver = next((p for p in data["profiles"] if p.get("id") == driver_id), None)
                     if driver and (driver.get("verification_status") != "approved" or driver.get("account_status", "active") in {"suspended", "review"}): return self.send_json({"error": "Motociclista não está habilitado"}, 403)
-                    ride["status"] = "accepted"; ride["driver_id"] = driver_id; ride["driver_lat"] = payload.get("lat"); ride["driver_lng"] = payload.get("lng"); ride["location_at"] = now(); ride["updated_at"] = now(); notify_profile(data, ride.get("passenger_id"), "Motociclista encontrado", "Seu motorista está a caminho.")
+                    ride["status"] = "accepted"; ride["driver_id"] = driver_id; ride["driver_lat"] = payload.get("lat"); ride["driver_lng"] = payload.get("lng"); ride["initial_driver_lat"] = payload.get("lat"); ride["initial_driver_lng"] = payload.get("lng"); ride["accepted_at"] = now(); ride["driver_moving_at"] = None; ride["location_at"] = now(); ride["updated_at"] = now(); notify_profile(data, ride.get("passenger_id"), "Motociclista encontrado", "Seu motorista está a caminho.")
                 elif action == "location":
                     if ride["status"] != "accepted": return self.send_json({"error": "Corrida ainda não foi aceita"}, 409)
                     lat, lng, stamp = payload.get("lat"), payload.get("lng"), now()
                     try:
                         previous = datetime.fromisoformat(ride["location_at"]); elapsed=max((datetime.fromisoformat(stamp)-previous).total_seconds(), 1); km=haversine_km(ride["driver_lat"], ride["driver_lng"], lat, lng); speed=km/elapsed*3600
                     except (KeyError, TypeError, ValueError): speed=0
+                    try:
+                        travelled=haversine_km(ride.get("initial_driver_lat"),ride.get("initial_driver_lng"),lat,lng)
+                        if ride.get("driver_moving_at") is None and travelled >= 0.02: ride["driver_moving_at"]=stamp
+                    except (TypeError,ValueError): pass
                     if speed > 140:
                         ride.setdefault("risk_flags", []).append({"type":"high_speed", "speed_kmh":round(speed,1), "created_at":stamp})
                         driver = next((p for p in data["profiles"] if p.get("id") == ride.get("driver_id")), None)
@@ -588,7 +592,13 @@ class Handler(SimpleHTTPRequestHandler):
                         driver["reports_count"] = int(driver.get("reports_count", 0)) + 1
                         if driver["reports_count"] >= 3: driver["account_status"] = "suspended"
                 elif action == "cancel":
-                    ride["status"] = "cancelled"; ride["updated_at"] = now()
+                    fee=0.0
+                    if payload.get("actor","passenger")=="passenger" and ride.get("status")=="accepted" and ride.get("driver_moving_at"):
+                        try:
+                            elapsed=(datetime.now(timezone.utc)-datetime.fromisoformat(str(ride["driver_moving_at"]).replace("Z","+00:00"))).total_seconds()
+                            if elapsed >= 60: fee=4.0
+                        except (TypeError,ValueError): pass
+                    ride["cancellation_fee"]=fee; ride["status"] = "cancelled"; ride["updated_at"] = now()
                 elif action == "finish":
                     ride["status"] = "finished"; ride["updated_at"] = now(); notify_profile(data, ride.get("passenger_id"), "Corrida finalizada", "Sua corrida foi finalizada.")
                 else:
