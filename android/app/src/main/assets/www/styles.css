@@ -210,3 +210,11 @@ body>.brand strong{font-size:14px!important;color:#fff!important}body>.brand sma
 /* Motoristas online só aparecem na primeira aba, antes de Para onde vamos. */
 #passengerPanel>#mapPanel.idle-nearby-map{display:block!important}
 #passengerPanel>#mapPanel:not(.idle-nearby-map){display:none!important}
+
+/* Ordem final da tela do passageiro: Para onde vamos e mapa abaixo. */
+#passengerPanel{display:flex!important;flex-direction:column!important}
+#passengerPanel>#mapPanel{order:2!important;width:100%!important}
+#passengerPanel>#passengerIdle{order:1!important;width:100%!important}
+#passengerPanel>#passengerActive{order:3!important;width:100%!important}
+#passengerPanel>#mapPanel.idle-nearby-map{display:block!important;margin-top:10px!important}
+#passengerPanel>#mapPanel:not(.idle-nearby-map){display:none!important}
