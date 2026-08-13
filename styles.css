@@ -201,3 +201,5 @@ body>.brand strong{font-size:14px!important;color:#fff!important}body>.brand sma
 /* O formulário e o valor só aparecem depois de Para onde vamos? */
 #passengerIdle:not(.route-open) #rideForm,#passengerIdle:not(.route-open) .saved-addresses,#passengerIdle:not(.route-open) #routeChooser{display:none!important}
 #passengerIdle:not(.route-open) .where-to-float{display:block!important}
+/* Oferta dinâmica opcional quando não há motorista próximo. */
+.dynamic-offer{display:grid;gap:6px;margin:10px 0;padding:12px;border:1px solid #444;border-radius:12px;background:#171717;color:#fff}.dynamic-offer strong{font-size:13px}.dynamic-offer span{font-size:11px;color:#bbb}.dynamic-offer button{width:100%;background:#000!important;color:#fff!important;border-color:#555!important}.dynamic-offer button.active{background:#fff!important;color:#000!important}
