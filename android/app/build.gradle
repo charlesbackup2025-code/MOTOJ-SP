@@ -2,5 +2,6 @@ plugins { id 'com.android.application' }
 
 android { namespace 'br.com.motoja.sp'; compileSdk 35
     defaultConfig { applicationId 'br.com.motoja.sp'; minSdk 23; targetSdk 35; versionCode 1; versionName '1.0' }
-    buildTypes { release { minifyEnabled false; proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro' } }
+    signingConfigs { release { storeFile project.hasProperty('SIGNING_STORE_FILE') ? file(project.property('SIGNING_STORE_FILE')) : null; storePassword project.findProperty('SIGNING_STORE_PASSWORD'); keyAlias project.findProperty('SIGNING_KEY_ALIAS'); keyPassword project.findProperty('SIGNING_KEY_PASSWORD') } }
+    buildTypes { release { minifyEnabled false; signingConfig project.hasProperty('SIGNING_STORE_FILE') ? signingConfigs.release : null; proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro' } }
 }
