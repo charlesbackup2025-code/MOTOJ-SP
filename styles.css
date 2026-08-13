@@ -47,3 +47,8 @@ body{background:#050505;color:#f7f7f7}.topbar{background:#000;border-bottom:1px 
 /* Cabeçalho final: conta à esquerda e marca no canto direito */
 .topbar{justify-content:initial}.brand{right:max(20px,calc((100% - 960px)/2));left:auto;transform:none}.top-actions{left:165px;right:auto}
 @media(max-width:560px){.brand{right:12px}.top-actions{left:62px}}
+
+/* Solicitação compacta e categoria negociável */
+#passengerPanel{max-width:590px;padding:18px}.quick-destinations{margin-bottom:12px}.ride-options{gap:6px;margin-bottom:12px}.ride-option{padding:8px 10px}.ride-option.active{padding:7px 9px}.ride-icon{width:27px;height:27px;font-size:15px}.estimate{margin:12px 0;padding:11px 13px}.estimate strong{font-size:20px}@media(max-width:560px){#passengerPanel{padding:14px}.ride-option small{font-size:10px}.ride-option b{font-size:12px}}
+/* Solicitação compacta e categoria negociável */
+#passengerPanel{max-width:590px;padding:18px}.quick-destinations{margin-bottom:12px}.ride-options{gap:6px;margin-bottom:12px}.ride-option{padding:8px 10px}.ride-option.active{padding:7px 9px}.ride-icon{width:27px;height:27px;font-size:15px}.estimate{margin:12px 0;padding:11px 13px}.estimate strong{font-size:20px}@media(max-width:560px){#passengerPanel{padding:14px}.ride-option small{font-size:10px}.ride-option b{font-size:12px}}
