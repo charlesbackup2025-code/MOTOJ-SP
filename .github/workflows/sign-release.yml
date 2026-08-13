@@ -20,7 +20,7 @@ jobs:
           printf 'Keystore: motoja-upload-key.jks\nAlias: motoja-upload\nStore password: %s\nKey password: %s\n' "$STORE_PASS" "$KEY_PASS" > SIGNING_CREDENTIALS.txt
       - name: Build signed AAB
         working-directory: android
-        run: gradle --no-daemon --stacktrace :app:bundleRelease -PSIGNING_STORE_FILE=motoja-upload-key.jks -PSIGNING_STORE_PASSWORD="$STORE_PASS" -PSIGNING_KEY_ALIAS=motoja-upload -PSIGNING_KEY_PASSWORD="$KEY_PASS"
+        run: gradle --no-daemon --stacktrace :app:bundleRelease -PSIGNING_STORE_FILE=../motoja-upload-key.jks -PSIGNING_STORE_PASSWORD="$STORE_PASS" -PSIGNING_KEY_ALIAS=motoja-upload -PSIGNING_KEY_PASSWORD="$KEY_PASS"
       - uses: actions/upload-artifact@v4
         with:
           name: MotoJa-SP-signed-release
