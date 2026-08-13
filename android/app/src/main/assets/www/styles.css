@@ -144,3 +144,4 @@ body.registration-open .home-btn{display:none!important}.brand{top:12px;bottom:a
 .saved-addresses .saved-gps{border:0!important;background:#171717!important;color:#eee!important;box-shadow:none!important}
 /* Logo permanece fixa mesmo durante a rolagem. */
 .brand,.brand.logo-hidden{position:fixed!important;opacity:1!important;visibility:visible!important;transform:none!important;pointer-events:auto!important}
+.voice-assist-option{display:flex;align-items:flex-start;gap:8px;line-height:1.4;background:#171717;border:1px solid #333;border-radius:10px;padding:10px 12px;color:#eee;font-size:12px}.voice-assist-option input{margin-top:3px;accent-color:#fff}
