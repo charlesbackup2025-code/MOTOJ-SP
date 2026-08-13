@@ -281,3 +281,8 @@ body>.brand{left:12px!important;right:auto!important;top:auto!important;bottom:1
 #passengerPanel #paymentMethod{background:#171717!important;color:#fff!important;border-color:#444!important}
 
 .calculation-hidden{display:none!important}.payment-field{margin-top:10px}
+/* Entrar/Sair permanece visível durante toda a rolagem. */
+#registrationLoginBtn{position:fixed!important;left:12px!important;top:12px!important;z-index:1001!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:40px!important;background:#000!important;color:#fff!important;border:1px solid #333!important;border-radius:9px!important;padding:9px 12px!important;box-shadow:0 6px 16px #0008!important}
+#registrationLoginBtn.hidden{display:none!important}
+#accountMenuBtn{position:fixed!important;left:12px!important;top:12px!important;z-index:1001!important}
+@media(max-width:560px){#registrationLoginBtn,#accountMenuBtn{left:10px!important;top:8px!important}}
