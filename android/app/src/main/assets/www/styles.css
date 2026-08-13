@@ -145,3 +145,6 @@ body.registration-open .home-btn{display:none!important}.brand{top:12px;bottom:a
 /* Logo permanece fixa mesmo durante a rolagem. */
 .brand,.brand.logo-hidden{position:fixed!important;opacity:1!important;visibility:visible!important;transform:none!important;pointer-events:auto!important}
 .voice-assist-option{display:flex;align-items:flex-start;gap:8px;line-height:1.4;background:#171717;border:1px solid #333;border-radius:10px;padding:10px 12px;color:#eee;font-size:12px}.voice-assist-option input{margin-top:3px;accent-color:#fff}
+/* A logo fica fora do cabeçalho sticky para nunca desaparecer ao rolar. */
+body>.brand{position:fixed!important;left:18px!important;right:auto!important;top:auto!important;bottom:18px!important;z-index:100!important;display:flex!important;opacity:1!important;visibility:visible!important;transform:none!important;pointer-events:auto!important}
+@media(max-width:560px){body>.brand{left:12px!important;bottom:12px!important}}
