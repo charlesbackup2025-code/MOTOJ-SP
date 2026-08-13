@@ -140,3 +140,7 @@ body.registration-open .home-btn{display:none!important}.brand{top:12px;bottom:a
 /* Layout final solicitado: logo inferior esquerda, voz inferior direita e GPS integrado aos atalhos. */
 .brand{left:18px!important;right:auto!important;top:auto!important;bottom:18px!important}.accessibility-voice-btn{right:18px!important;bottom:18px!important}.account-avatar{color:#fff!important}.saved-addresses .saved-gps{background:#171717!important;color:#eee!important;border:1px solid #333!important}.saved-addresses .saved-gps:hover{background:#fff!important;color:#000!important}
 @media(max-width:560px){.brand{left:12px!important;right:auto!important;bottom:12px!important}.accessibility-voice-btn{right:12px!important;bottom:12px!important}}
+/* GPS sem borda clara, integrado visualmente aos endereços salvos. */
+.saved-addresses .saved-gps{border:0!important;background:#171717!important;color:#eee!important;box-shadow:none!important}
+/* Logo permanece fixa mesmo durante a rolagem. */
+.brand,.brand.logo-hidden{position:fixed!important;opacity:1!important;visibility:visible!important;transform:none!important;pointer-events:auto!important}
