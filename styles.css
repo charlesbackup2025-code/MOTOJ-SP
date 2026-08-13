@@ -268,3 +268,14 @@ body>.brand{left:12px!important;right:auto!important;top:auto!important;bottom:1
 #mapPanel.idle-nearby-map .map-caption{font-size:10px!important}
 .home-history{order:3!important;margin:10px auto 0!important}
 @media(max-width:560px){#mapPanel.idle-nearby-map #map{height:220px!important;min-height:220px!important}}
+/* Ajuste tipográfico e fundo da aba Passageiro. */
+#passengerPanel{background:#101010!important;color:#f7f7f7!important;border-color:#292929!important}
+#passengerPanel .field span{font-size:13px!important;line-height:1.25!important;color:#eee!important}
+#passengerPanel input,#passengerPanel select{font-size:15px!important;min-height:44px!important}
+#passengerPanel .where-to-float{font-size:17px!important;line-height:1.2!important;font-weight:850!important;padding:16px 18px!important;background:#000!important;color:#fff!important;border:1px solid #3a3a3a!important}
+#passengerPanel .saved-addresses>span{font-size:13px!important;color:#ddd!important}
+#passengerPanel .ride-option strong{font-size:14px!important}.ride-option small{font-size:11px!important}
+#passengerPanel .estimate{font-size:14px!important;background:#181818!important;border-color:#333!important}
+#passengerPanel .estimate strong{font-size:22px!important;color:#fff!important}
+#passengerPanel .estimate-detail{font-size:12px!important;color:#bbb!important}
+#passengerPanel #paymentMethod{background:#171717!important;color:#fff!important;border-color:#444!important}
