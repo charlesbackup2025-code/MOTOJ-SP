@@ -23,6 +23,7 @@ let pollTimer;
 let map;
 let userMarker;
 let driverMarker;
+let pickupCircle;
 let nearbyMarkers=[];
 let geoWatch;
 let selectedRating=0;
@@ -37,7 +38,7 @@ const toast = (text) => { const el=$('#toast'); el.textContent=text; el.classLis
 function notify(title,body){ if('Notification' in window && Notification.permission==='granted') new Notification(title,{body}); }
 function decodeVapid(value){const pad='='.repeat((4-value.length%4)%4);const raw=atob((value+pad).replace(/-/g,'+').replace(/_/g,'/'));return Uint8Array.from([...raw].map(c=>c.charCodeAt(0)));}
 async function subscribePush(){if(!state.apiToken||!state.profile?.id||!('serviceWorker' in navigator)||!('PushManager' in window))return false;const config=await api('/push/config');if(!config.enabled||!config.vapid_public_key)return false;const registration=await navigator.serviceWorker.ready;const subscription=await registration.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:decodeVapid(config.vapid_public_key)});await api(`/profiles/${state.profile.id}/push-subscription`,{method:'POST',body:JSON.stringify({subscription:subscription.toJSON()})});return true;}
-function destroyMap(){if(map){map.remove();map=null;}userMarker=null;driverMarker=null;nearbyMarkers=[];if($('#mapPanel'))$('#mapPanel').classList.add('hidden');}
+function destroyMap(){if(map){map.remove();map=null;}userMarker=null;driverMarker=null;pickupCircle=null;nearbyMarkers=[];if($('#mapPanel'))$('#mapPanel').classList.add('hidden');}
 async function loadNearbyDrivers(){if(mode!=='passenger'||!state.coords||!map)return;try{const result=await api(`/drivers/nearby?lat=${encodeURIComponent(state.coords.lat)}&lng=${encodeURIComponent(state.coords.lng)}`);nearbyMarkers.forEach(marker=>marker.remove());nearbyMarkers=(result.drivers||[]).map(driver=>L.marker([driver.lat,driver.lng]).addTo(map).bindPopup(`Motorista online • ${Number(driver.distance_km||0).toFixed(1).replace('.',',')} km`));if(result.drivers?.length){$('#mapStatus').textContent=`${result.drivers.length} motorista(s) próximo(s)`;$('#mapCaption').textContent='Localização atualizada em tempo real.';}else{$('#mapStatus').textContent='Buscando';$('#mapCaption').textContent='Localização atualizada em tempo real.';}}catch(_){}}
 async function geocodeAddress(address){const url=`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=br&city=São%20Paulo&q=${encodeURIComponent(address)}`;const response=await fetch(url,{headers:{'Accept-Language':'pt-BR'}});if(!response.ok)throw new Error('geocode');const rows=await response.json();if(!rows[0])throw new Error('not found');return {lat:Number(rows[0].lat),lng:Number(rows[0].lon)};}
 async function reverseGeocode(coords){const url=`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=18&lat=${encodeURIComponent(coords.lat)}&lon=${encodeURIComponent(coords.lng)}`;const response=await fetch(url,{headers:{'Accept-Language':'pt-BR'}});if(!response.ok)throw new Error('reverse geocode');const data=await response.json(),a=data.address||{};const road=a.road||a.pedestrian||a.residential||'Localização atual';const number=a.house_number||'nº aproximado';const area=a.suburb||a.neighbourhood||a.city_district||'';return `${road}, ${number}${area?` - ${area}`:''}`;}
@@ -46,11 +47,11 @@ async function fillAutomaticPickup(){try{const position=await getCurrentPosition
 function distanceBetween(a,b){const rad=Math.PI/180,lat1=a.lat*rad,lat2=b.lat*rad,dlat=(b.lat-a.lat)*rad,dlon=(b.lng-a.lng)*rad;const x=Math.sin(dlat/2)**2+Math.cos(lat1)*Math.cos(lat2)*Math.sin(dlon/2)**2;return 6371*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));}
 async function updateDistanceFromAddresses(){const origin=$('#origin')?.value.trim(),destination=$('#destination')?.value.trim();if(!origin||!destination)return Number($('#distance').value||8);try{const from=(state.coords&&origin.startsWith('Minha localização'))?state.coords:await geocodeAddress(origin);const to=await geocodeAddress(destination);state.coords=from;save();const km=Math.max(.5,Math.round(distanceBetween(from,to)*10)/10);$('#distance').value=km;refreshEstimate();return km;}catch(_){refreshEstimate();return Number($('#distance').value||8);}}
 function updateMap(coords, driverCoords){
-  if(mode!=='passenger'||!state.ride||!coords) return;
+  if(mode!=='passenger'||!coords||(!state.ride&&!state.profile)) return;
   const panel=$('#mapPanel'); if(!panel) return; panel.classList.remove('hidden');
   if(typeof L==='undefined'){ $('#mapCaption').textContent=`Sua localização: ${coords.lat.toFixed(5)}, ${coords.lng.toFixed(5)}`; return; }
   if(!map){ map=L.map('map',{zoomControl:true}).setView([coords.lat,coords.lng],14); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map); }
-  if(!userMarker) userMarker=L.marker([coords.lat,coords.lng]).addTo(map).bindPopup('Você está aqui'); else userMarker.setLatLng([coords.lat,coords.lng]);
+  if(!userMarker) userMarker=L.marker([coords.lat,coords.lng]).addTo(map).bindPopup('Embarque do passageiro'); else userMarker.setLatLng([coords.lat,coords.lng]); if(!pickupCircle)pickupCircle=L.circle([coords.lat,coords.lng],{radius:9,color:'#fff',weight:2,fillColor:'#fff',fillOpacity:.12}).addTo(map);else pickupCircle.setLatLng([coords.lat,coords.lng]);
   if(driverCoords){ if(!driverMarker) driverMarker=L.marker([driverCoords.lat,driverCoords.lng]).addTo(map).bindPopup('Motociclista'); else driverMarker.setLatLng([driverCoords.lat,driverCoords.lng]); map.fitBounds(L.latLngBounds([[coords.lat,coords.lng],[driverCoords.lat,driverCoords.lng]]).pad(.25)); $('#mapStatus').textContent='Motorista em movimento'; $('#mapCaption').textContent='Acompanhe a aproximação do motociclista no mapa.'; } else { map.setView([coords.lat,coords.lng],14); $('#mapStatus').textContent='Sua localização'; $('#mapCaption').textContent='Ponto de partida definido pela localização do aparelho.'; }
   setTimeout(()=>map.invalidateSize(),100);
 }
