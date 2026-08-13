@@ -186,3 +186,18 @@ body>.brand{position:fixed!important;left:18px!important;right:auto!important;to
 #passengerPanel.passenger-map-active #mapPanel #map{height:155px!important;min-height:155px!important}
 #passengerPanel.passenger-map-active #mapPanel .map-caption{font-size:10px!important}
 @media(max-width:560px){#passengerIdle.route-open #mapPanel #map,#passengerPanel.passenger-map-active #mapPanel #map{height:135px!important;min-height:135px!important}}
+
+/* Logo fixa no topo, ao lado dos controles de entrar/sair. */
+body>.brand{position:fixed!important;top:10px!important;bottom:auto!important;left:max(180px,calc((100% - 960px)/2 + 180px))!important;right:auto!important;z-index:1000!important;display:flex!important;align-items:center!important;opacity:1!important;visibility:visible!important;transform:none!important;background:#000!important;border:1px solid #333!important;color:#fff!important;padding:5px 9px!important;border-radius:10px!important;box-shadow:0 5px 14px #0008!important;pointer-events:auto!important}
+body>.brand .brand-mark{background:transparent!important;width:28px!important;height:28px!important;font-size:24px!important}
+body>.brand strong{font-size:14px!important;color:#fff!important}body>.brand small{font-size:8px!important;color:#aaa!important}
+@media(max-width:560px){body>.brand{left:112px!important;top:6px!important;padding:4px 6px!important}body>.brand .brand-mark{width:25px!important;height:25px!important;font-size:21px!important}body>.brand strong{font-size:12px!important}body>.brand small{display:none!important}}
+/* Mapa de motoristas acima da bolha de nova corrida. */
+#passengerPanel>#mapPanel{display:block!important;order:-2!important;margin:0 0 10px!important;padding:9px!important}
+#passengerPanel>#mapPanel #map{height:165px!important;min-height:165px!important;border-radius:11px!important}
+#passengerPanel>#mapPanel .section-heading{margin-bottom:6px!important}#passengerPanel>#mapPanel .section-heading h2{font-size:14px!important}
+#passengerPanel>#mapPanel .map-caption{font-size:10px!important;margin:6px 2px 0!important}
+@media(max-width:560px){#passengerPanel>#mapPanel #map{height:145px!important;min-height:145px!important}}
+/* O formulário e o valor só aparecem depois de Para onde vamos? */
+#passengerIdle:not(.route-open) #rideForm,#passengerIdle:not(.route-open) .saved-addresses,#passengerIdle:not(.route-open) #routeChooser{display:none!important}
+#passengerIdle:not(.route-open) .where-to-float{display:block!important}
