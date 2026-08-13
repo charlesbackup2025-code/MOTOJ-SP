@@ -96,3 +96,5 @@ body.logged-in .hero{display:none!important}.home-btn{width:36px;height:36px;bor
 body.registration-open .home-btn{display:none!important}.brand{top:12px;bottom:auto;right:18px;left:auto;z-index:8}@media(max-width:560px){.brand{top:8px;right:12px;bottom:auto}}
 /* Mapa escuro de prévia; os marcadores de motoristas só são carregados durante a procura. */
 .map-panel #map{background:#090909}.map-panel #map .leaflet-tile-pane{filter:brightness(.42) saturate(.7)}.map-panel #map .leaflet-control-zoom a,.map-panel #map .leaflet-control-attribution{background:#111;color:#bbb;border-color:#333}.left-header-tools .home-btn{order:2}.left-header-tools .account-menu-btn{order:1}
+/* Hierarquia visual da tela de cadastro */
+.eyebrow{font-size:10px!important;letter-spacing:.1em}.hero h1{font-size:clamp(38px,6vw,52px)!important}.hero p:not(.eyebrow){font-size:15px!important;font-weight:500}@media(max-width:560px){.hero h1{font-size:36px!important}.hero p:not(.eyebrow){font-size:14px!important}.eyebrow{font-size:9px!important}}
