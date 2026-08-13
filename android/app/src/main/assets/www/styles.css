@@ -159,3 +159,22 @@ body>.brand{position:fixed!important;left:18px!important;right:auto!important;to
 #passengerIdle.route-open #mapPanel .leaflet-control-attribution{background:#111c!important;color:#999!important}
 #passengerIdle.route-open #mapPanel .leaflet-control-attribution a{color:#bbb!important}
 @media(max-width:560px){#passengerIdle.route-open #mapPanel #map{height:260px!important}}
+/* Interface de navegação, menus e ações com alto contraste. */
+.primary,#profileSubmit,#rideForm button[type=submit]{background:#000!important;color:#fff!important;border:1px solid #333!important}
+.primary:disabled,#profileSubmit:disabled,#rideForm button[type=submit]:disabled{background:#000!important;color:#fff!important;opacity:.8}
+.secondary,.notice-btn,.registration-login-btn,.account-menu-btn{background:#000!important;color:#fff!important;border:1px solid #333!important}
+.where-to-float{display:none;position:relative;width:100%;min-height:54px;margin:4px 0 12px;padding:14px 18px;border-radius:999px;background:#000;color:#fff;border:1px solid #333;font-size:16px;font-weight:850;text-align:left;box-shadow:0 8px 22px #0008}
+#passengerIdle:not(.route-open) .where-to-float{display:block}
+#passengerIdle:not(.route-open) #rideForm{display:none!important}
+.route-chooser{display:grid;gap:9px;background:#111;color:#fff;border:1px solid #333;border-radius:15px;padding:16px;margin-bottom:12px;box-shadow:0 12px 30px #0009}
+.route-chooser strong{font-size:18px}.route-chooser span{font-size:12px;color:#aaa}.route-chooser .primary{width:100%}
+#passengerIdle:not(.route-open) .route-chooser{display:none!important}
+#passengerIdle:not(.route-open) .saved-addresses,#passengerIdle:not(.route-open) #mapPanel{display:none!important}
+body>.brand{position:fixed!important;left:18px!important;right:auto!important;top:auto!important;bottom:18px!important;z-index:1000!important;display:flex!important;opacity:1!important;visibility:visible!important;transform:none!important}
+#passengerIdle.route-open #mapPanel{display:block!important;order:initial!important;background:#090909!important;border:1px solid #2c2c2c!important}
+#passengerIdle.route-open #mapPanel #map{height:310px!important;border-radius:13px!important;overflow:hidden;box-shadow:inset 0 0 30px #000}
+#passengerIdle.route-open #mapPanel #map:after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#0008 0%,transparent 30%,transparent 72%,#0009 100%);z-index:400}
+#passengerIdle.route-open #mapPanel .leaflet-tile-pane{filter:brightness(.4) saturate(.7) contrast(1.1)}
+#passengerIdle.route-open #mapPanel .leaflet-control-zoom a{background:#000!important;color:#fff!important;border-color:#333!important}
+#passengerIdle.route-open #mapPanel .leaflet-control-attribution{background:#000c!important;color:#999!important}
+@media(max-width:560px){body>.brand{left:12px!important;bottom:12px!important}#passengerIdle.route-open #mapPanel #map{height:270px!important}}
