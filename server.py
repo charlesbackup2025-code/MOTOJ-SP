@@ -41,6 +41,7 @@ ROOT = Path(__file__).resolve().parent
 DB = Path(os.getenv("DATA_FILE", str(ROOT / "data.json")))
 SQLITE_FILE = Path(os.getenv("SQLITE_FILE", str(ROOT / "motoja.sqlite3")))
 UPLOAD_DIR = Path(os.getenv("UPLOAD_DIR", str(ROOT / "uploads")))
+BACKUP_DIR = Path(os.getenv("BACKUP_DIR", str(ROOT / "backups")))
 STORAGE = os.getenv("STORAGE", "sqlite").lower()
 ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "motoja-admin-demo")
 VAPID_PUBLIC_KEY = os.getenv("VAPID_PUBLIC_KEY", "")
@@ -186,8 +187,25 @@ def read_db():
     return data
 
 
+def _write_encrypted_backups(stored_data):
+    try:
+        BACKUP_DIR.mkdir(parents=True, exist_ok=True)
+        groups = {
+            'passengers/registration.json': [p for p in stored_data.get('profiles', []) if p.get('role') == 'passenger'],
+            'drivers/registration.json': [p for p in stored_data.get('profiles', []) if p.get('role') == 'driver'],
+            'usage/rides.json': stored_data.get('rides', []),
+        }
+        for relative, records in groups.items():
+            target = BACKUP_DIR / relative; target.parent.mkdir(parents=True, exist_ok=True)
+            payload = {'saved_at': now(), 'records': records}
+            temp = target.with_suffix('.tmp'); temp.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf-8'); temp.replace(target)
+    except Exception:
+        pass
+
+
 def write_db(data):
     stored_data = _protect_data(data, encrypt=True)
+    _write_encrypted_backups(stored_data)
     if STORAGE == "json":
         temp = DB.with_suffix(".tmp")
         temp.write_text(json.dumps(stored_data, ensure_ascii=False, indent=2), encoding="utf-8")
