@@ -43,7 +43,7 @@ SQLITE_FILE = Path(os.getenv("SQLITE_FILE", str(ROOT / "motoja.sqlite3")))
 UPLOAD_DIR = Path(os.getenv("UPLOAD_DIR", str(ROOT / "uploads")))
 BACKUP_DIR = Path(os.getenv("BACKUP_DIR", str(ROOT / "backups")))
 STORAGE = os.getenv("STORAGE", "sqlite").lower()
-ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "motoja-admin-demo")
+ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "")
 VAPID_PUBLIC_KEY = os.getenv("VAPID_PUBLIC_KEY", "")
 VAPID_PRIVATE_KEY = os.getenv("VAPID_PRIVATE_KEY", "")
 VAPID_SUBJECT = os.getenv("VAPID_SUBJECT", "mailto:admin@motorja.local")
@@ -271,7 +271,11 @@ def notify_profile(data, profile_id, title, message):
 
 
 def body(handler):
-    length = int(handler.headers.get("Content-Length", "0"))
+    try: length = int(handler.headers.get("Content-Length", "0"))
+    except (TypeError, ValueError): length = 0
+    if length > 8_000_000:
+        handler.send_json({"error": "Requisição muito grande"}, 413)
+        return None
     raw = handler.rfile.read(length) if length else b"{}"
     handler.raw_body = raw
     try:
@@ -282,7 +286,7 @@ def body(handler):
 
 
 def is_admin(handler):
-    return hmac.compare_digest(handler.headers.get("X-Admin-Token", ""), ADMIN_TOKEN)
+    return bool(ADMIN_TOKEN) and hmac.compare_digest(handler.headers.get("X-Admin-Token", ""), ADMIN_TOKEN)
 
 
 def session_profile_id(handler):
@@ -301,11 +305,11 @@ class Handler(SimpleHTTPRequestHandler):
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("X-Frame-Options", "DENY")
         self.send_header("Referrer-Policy", "strict-origin-when-cross-origin")
-        self.send_header("Permissions-Policy", "camera=(self), geolocation=(self), microphone=()")
+        self.send_header("Permissions-Policy", "camera=(self), geolocation=(self), microphone=(self)")
         self.send_header("Cross-Origin-Opener-Policy", "same-origin")
         self.send_header("Cross-Origin-Resource-Policy", "same-site")
         self.send_header("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
-        self.send_header("Content-Security-Policy", "default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: https://*.tile.openstreetmap.org; connect-src 'self' https://motoja-sp-api.onrender.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'")
+        self.send_header("Content-Security-Policy", "default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: https://*.tile.openstreetmap.org; connect-src 'self' https://motoja-sp-api.onrender.com https://nominatim.openstreetmap.org https://router.project-osrm.org; frame-ancestors 'none'; base-uri 'self'; form-action 'self'")
         super().end_headers()
 
     def send_json(self, payload, status=200):
