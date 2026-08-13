@@ -46,6 +46,7 @@ MP_WEBHOOK_SECRET = os.getenv("MP_WEBHOOK_SECRET", "")
 LOCK = threading.Lock()
 SESSIONS = {}
 PBKDF2_ROUNDS = 180_000
+RIDE_RATES = {"moto": 1.0, "priority": 1.25, "economy": 0.84}
 
 
 def now():
@@ -337,8 +338,8 @@ class Handler(SimpleHTTPRequestHandler):
                 required = ("passenger_id", "origin", "destination", "distance")
                 if any(not payload.get(key) for key in required):
                     return self.send_json({"error": "Dados da corrida incompletos"}, 400)
-                distance = float(payload["distance"])
-                ride = {"id": uuid.uuid4().hex[:12], "passenger_id": payload["passenger_id"], "driver_id": None, "origin": payload["origin"], "destination": payload["destination"], "distance": distance, "price": round(max(8, 6.5 + distance * 1.56), 2), "eta_minutes": max(7, round(distance * 3)), "payment_method": payload.get("payment_method", "pix"), "rating": None, "status": "searching", "created_at": now(), "updated_at": now()}
+                distance = float(payload["distance"]); ride_type = payload.get("ride_type", "moto"); rate = RIDE_RATES.get(ride_type, 1.0)
+                ride = {"id": uuid.uuid4().hex[:12], "passenger_id": payload["passenger_id"], "driver_id": None, "origin": payload["origin"], "destination": payload["destination"], "distance": distance, "ride_type": ride_type, "price": round(max(8, (6.5 + distance * 1.56) * rate), 2), "eta_minutes": max(7, round(distance * 3)), "payment_method": payload.get("payment_method", "pix"), "rating": None, "status": "searching", "created_at": now(), "updated_at": now()}
                 data["rides"].insert(0, ride)
                 write_db(data)
                 return self.send_json(ride, 201)
