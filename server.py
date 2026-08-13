@@ -56,8 +56,9 @@ MIN_FARE = 7.0
 PER_KM = 1.50
 
 def ride_price(distance, ride_type="moto", negotiated=0):
-    base=max(MIN_FARE, float(distance or 1) * PER_KM)
-    if ride_type == "economy": return round(base, 2)
+    distance=max(0.0, min(200.0, float(distance or 0)))
+    base=MIN_FARE if distance <= 2 else distance * PER_KM
+    if ride_type in ("economy", "moto"): return round(base, 2)
     if ride_type == "priority": return round(base + 8, 2)
     if ride_type == "negotiate": return round(max(base + 8, float(negotiated or 0)), 2)
     return round(base + 4, 2)
