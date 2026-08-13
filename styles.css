@@ -62,3 +62,6 @@ body{background:#050505;color:#f7f7f7}.topbar{background:#000;border-bottom:1px 
 #rideForm #origin,#rideForm #destination{padding:10px 12px;font-size:13px;height:42px}#rideForm .input-action button{height:42px}.left-header-tools{gap:0}.settings-btn,.settings-menu{display:none!important}
 /* Último refinamento da solicitação */
 #rideForm #origin,#rideForm #destination{padding:10px 12px;font-size:13px;height:42px}#rideForm .input-action button{height:42px}.left-header-tools{gap:0}.settings-btn,.settings-menu{display:none!important}
+/* Cadastro de motorista com o mesmo padrão compacto do passageiro */
+body.registration-open .profile-panel{max-width:560px;padding:16px;font-size:13px}body.registration-open .profile-panel .field span{font-size:11px;margin-bottom:5px}body.registration-open .profile-panel .field input,body.registration-open .profile-panel .field select{padding:10px 12px;font-size:13px;height:42px}body.registration-open .profile-panel .consent{font-size:11px}.profile-panel .primary{font-size:13px;padding:12px}
+@media(max-width:560px){body.registration-open .profile-panel{padding:14px}body.registration-open .profile-panel .field input{height:40px}}
