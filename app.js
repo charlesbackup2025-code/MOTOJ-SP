@@ -158,6 +158,6 @@ $('#rideForm').onsubmit=async(e)=>{e.preventDefault();if(rideSubmitting)return;c
 $('#onlineToggle').onclick=async()=>{state.online=!state.online;if(state.online){await syncProfile();if(navigator.geolocation) geoWatch=navigator.geolocation.watchPosition(pos=>{state.coords={lat:pos.coords.latitude,lng:pos.coords.longitude};save();updateMap(state.coords,state.ride?.driverCoords);sendDriverLocation();},()=>{},{enableHighAccuracy:true,maximumAge:10000,timeout:10000});}else if(geoWatch&&navigator.geolocation){navigator.geolocation.clearWatch(geoWatch);geoWatch=null;await sendDriverLocation();}save();renderDriver();if(state.online) syncRemoteState();};
 window.addEventListener('beforeinstallprompt',(e)=>{e.preventDefault();deferredInstall=e;$('#installBtn').classList.remove('hidden');});
 $('#installBtn').onclick=async()=>{if(!deferredInstall)return;deferredInstall.prompt();deferredInstall=null;$('#installBtn').classList.add('hidden');};
-setTimeout(()=>$('#splashScreen')?.classList.add('hidden'),500);
+
 if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js'));
 refreshEstimate();renderDynamicOffer();renderAll();restoreSecureState();pollTimer=setInterval(syncRemoteState,5000);
