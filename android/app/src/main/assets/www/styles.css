@@ -243,3 +243,6 @@ body>.brand strong{font-size:14px!important;color:#fff!important}body>.brand sma
 #passengerPanel>#passengerIdle{order:1!important}
 #passengerPanel>#mapPanel{order:2!important}
 #passengerPanel>#mapPanel.idle-nearby-map{margin:10px auto 0!important}
+/* Logo MotoJá fixa no canto inferior esquerdo. */
+body>.brand{left:18px!important;right:auto!important;top:auto!important;bottom:18px!important;z-index:1000!important}
+@media(max-width:560px){body>.brand{left:12px!important;right:auto!important;top:auto!important;bottom:12px!important}}
