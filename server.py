@@ -295,7 +295,7 @@ class Handler(SimpleHTTPRequestHandler):
                     profile = next((p for p in data["profiles"] if p["id"] == match_admin.group(1)), None)
                     status = payload.get("status")
                     if not profile or status not in {"approved", "rejected", "pending"}: return self.send_json({"error": "Perfil ou status inválido"}, 400)
-                    if status == "approved" and len(profile.get("documents", [])) < 5: return self.send_json({"error": "Envie RG, CNH, carteira, foto e selfie antes de aprovar"}, 400)
+                    if status == "approved" and len(profile.get("documents", [])) < 6: return self.send_json({"error": "Envie RG, CNH, carteira, foto, selfie e CRLV antes de aprovar"}, 400)
                     if status == "approved" and profile.get("background_check_status") not in {"pending_review", "approved"}: return self.send_json({"error": "A verificação de antecedentes precisa estar autorizada"}, 400)
                     if status == "approved" and profile.get("face_verification_status") not in {"pending_review", "approved"}: return self.send_json({"error": "O reconhecimento facial precisa estar autorizado"}, 400)
                     profile["verification_status"] = status; profile["verification_note"] = str(payload.get("note", ""))[:300]; profile["background_check_status"] = "approved" if status == "approved" else ("rejected" if status == "rejected" else profile.get("background_check_status", "pending_review")); profile["face_verification_status"] = "approved" if status == "approved" else ("rejected" if status == "rejected" else profile.get("face_verification_status", "pending_review")); profile["updated_at"] = now(); write_db(data)
