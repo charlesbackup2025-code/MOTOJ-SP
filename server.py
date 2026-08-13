@@ -320,12 +320,12 @@ class Handler(SimpleHTTPRequestHandler):
                     return self.send_json({"error": "Nome, celular e senha forte de 8 caracteres são obrigatórios"}, 400)
                 if role == "driver" and (len(cpf) != 11 or len(plate) < 7 or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", birth_date) or not background_consent or not face_consent):
                     return self.send_json({"error": "Motorista precisa informar CPF, placa, data, autorizar antecedentes e reconhecimento facial"}, 400)
-                if role == "passenger" and (not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email) or not face_consent):
-                    return self.send_json({"error": "Passageiro precisa informar email e autorizar o reconhecimento facial"}, 400)
+                if role == "passenger" and not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
+                    return self.send_json({"error": "Passageiro precisa informar um email válido"}, 400)
                 if any(p.get("phone") == phone for p in data["profiles"]):
                     return self.send_json({"error": "Celular já cadastrado"}, 409)
                 salt = secrets.token_hex(16)
-                profile = {"id": uuid.uuid4().hex[:12], "name": name, "phone": phone, "email": email or None, "role": role, "cpf": cpf or None, "birth_date": birth_date or None, "plate": plate or None, "background_check_status": "pending_review" if role == "driver" else "not_required", "background_check_consent_at": now() if role == "driver" and background_consent else None, "face_verification_status": "pending_review" if role in {"driver", "passenger"} else "not_required", "face_consent_at": now() if role in {"driver", "passenger"} and face_consent else None, "verification_status": "pending" if role == "driver" else "not_required", "account_status": "active", "reports_count": 0, "pin_salt": salt, "pin_hash": make_pin_hash(pin, salt), "created_at": now()}
+                profile = {"id": uuid.uuid4().hex[:12], "name": name, "phone": phone, "email": email or None, "role": role, "cpf": cpf or None, "birth_date": birth_date or None, "plate": plate or None, "background_check_status": "pending_review" if role == "driver" else "not_required", "background_check_consent_at": now() if role == "driver" and background_consent else None, "face_verification_status": "pending_review" if role == "driver" else "not_required", "face_consent_at": now() if role == "driver" and face_consent else None, "verification_status": "pending" if role == "driver" else "not_required", "account_status": "active", "reports_count": 0, "pin_salt": salt, "pin_hash": make_pin_hash(pin, salt), "created_at": now()}
                 data["profiles"].append(profile); write_db(data)
                 return self.send_json({"token": token_for(profile["id"]), "profile": public_profile(profile)}, 201)
             if parsed.path == "/api/auth/login":
