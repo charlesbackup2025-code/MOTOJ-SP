@@ -279,3 +279,5 @@ body>.brand{left:12px!important;right:auto!important;top:auto!important;bottom:1
 #passengerPanel .estimate strong{font-size:22px!important;color:#fff!important}
 #passengerPanel .estimate-detail{font-size:12px!important;color:#bbb!important}
 #passengerPanel #paymentMethod{background:#171717!important;color:#fff!important;border-color:#444!important}
+
+.calculation-hidden{display:none!important}.payment-field{margin-top:10px}
