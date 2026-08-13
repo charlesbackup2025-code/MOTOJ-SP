@@ -142,12 +142,23 @@ def _needs_encryption(data):
     return False
 
 
+def _encrypt_existing_documents(data):
+    if not _cipher(): return
+    for profile in data.get("profiles", []):
+        for doc in profile.get("documents", []):
+            path=Path(str(doc.get("stored", "")))
+            if not path.exists() or path.suffix == ".enc": continue
+            raw=path.read_bytes()
+            if raw.startswith(b"MOTOJA1"): continue
+            encrypted=path.with_suffix(".enc"); encrypted.write_bytes(_encrypt_file(raw)); path.unlink(missing_ok=True); doc["stored"]=str(encrypted)
+
+
 def read_db():
     if STORAGE == "json":
         if not DB.exists(): return {"profiles": [], "rides": []}
         try:
             raw_data=json.loads(DB.read_text(encoding="utf-8")); data=_protect_data(raw_data, encrypt=False)
-            if _needs_encryption(raw_data): write_db(data)
+            if _needs_encryption(raw_data): _encrypt_existing_documents(data); write_db(data)
             return data
         except (ValueError, OSError): return {"profiles": [], "rides": []}
     init_storage()
@@ -155,7 +166,7 @@ def read_db():
         profiles=[json.loads(row[0]) for row in conn.execute("SELECT payload FROM profiles")]
         rides=[json.loads(row[0]) for row in conn.execute("SELECT payload FROM rides ORDER BY rowid DESC")]
     raw_data={"profiles": profiles, "rides": rides}; data=_protect_data(raw_data, encrypt=False)
-    if _needs_encryption(raw_data): write_db(data)
+    if _needs_encryption(raw_data): _encrypt_existing_documents(data); write_db(data)
     return data
 
 
