@@ -53,17 +53,18 @@ ENCRYPTION_KEY = os.getenv("MOTOJA_ENCRYPTION_KEY", "")
 LOCK = threading.Lock()
 SESSIONS = {}
 PBKDF2_ROUNDS = 180_000
-MIN_FARE = 7.0
+MIN_FARE = 8.0
 PER_KM = 1.50
 
-def ride_price(distance, ride_type="moto", negotiated=0):
+def ride_price(distance, ride_type="moto", negotiated=0, dynamic_multiplier=1):
     distance=max(0.0, min(200.0, float(distance or 0)))
     base=MIN_FARE if distance <= 2 else distance * PER_KM
-    if ride_type in ("economy", "moto"): return round(base, 2)
-    if ride_type == "priority": return round(base + 8, 2)
-    if ride_type == "delivery": return round(base, 2)
-    if ride_type == "negotiate": return round(max(base + 8, float(negotiated or 0)), 2)
-    return round(base + 4, 2)
+    if ride_type in ("economy", "moto", "delivery"): total=base
+    elif ride_type == "priority": total=base + 8
+    elif ride_type == "negotiate": total=max(base + 8, float(negotiated or 0))
+    else: total=base + 4
+    multiplier=max(1.0, min(2.0, float(dynamic_multiplier or 1)))
+    return round(total * multiplier, 2)
 
 
 
@@ -541,12 +542,13 @@ class Handler(SimpleHTTPRequestHandler):
                 if any(not payload.get(key) for key in required):
                     return self.send_json({"error": "Dados da corrida incompletos"}, 400)
                 if session_profile_id(self) != str(payload.get("passenger_id")): return self.send_json({"error": "Sessão inválida"}, 401)
-                distance = float(payload["distance"]); ride_type = payload.get("ride_type", "moto"); negotiated_price = float(payload.get("negotiated_price") or 0);
+                distance = float(payload["distance"]); ride_type = payload.get("ride_type", "moto"); negotiated_price = float(payload.get("negotiated_price") or 0); dynamic_accepted = bool(payload.get("dynamic_accepted")); dynamic_multiplier = max(1.0, min(2.0, float(payload.get("dynamic_multiplier") or 1))) if dynamic_accepted else 1.0;
                 if ride_type not in {"moto", "priority", "economy", "negotiate", "delivery"}: ride_type="moto"
                 passenger = next((p for p in data["profiles"] if p.get("id") == payload["passenger_id"]), None) or {}
                 passenger_rating = float(passenger.get("rating_average") or 0)
                 passenger_rating_count = int(passenger.get("rating_count") or 0)
-                ride = {"id": uuid.uuid4().hex[:12], "passenger_id": payload["passenger_id"], "passenger_name": passenger.get("name", "Passageiro"), "passenger_rating": passenger_rating, "passenger_rating_count": passenger_rating_count, "driver_id": None, "origin": payload["origin"], "destination": payload["destination"], "distance": distance, "ride_type": ride_type, "negotiated_price": negotiated_price, "price": ride_price(distance, ride_type, negotiated_price), "eta_minutes": max(7, round(distance * 3)), "payment_method": payload.get("payment_method", "pix"), "rating": None, "status": "searching", "created_at": now(), "updated_at": now()}
+                ride = {"id": uuid.uuid4().hex[:12], "passenger_id": payload["passenger_id"], "passenger_name": passenger.get("name", "Passageiro"), "passenger_rating": passenger_rating, "passenger_rating_count": passenger_rating_count, "driver_id": None, "origin": payload["origin"], "destination": payload["destination"], "distance": distance, "ride_type": ride_type, "negotiated_price": negotiated_price, "price": ride_price(distance, ride_type, negotiated_price, dynamic_multiplier),
+                        "dynamic_accepted": dynamic_accepted, "dynamic_multiplier": dynamic_multiplier, "eta_minutes": max(7, round(distance * 3)), "payment_method": payload.get("payment_method", "pix"), "rating": None, "status": "searching", "created_at": now(), "updated_at": now()}
                 data["rides"].insert(0, ride)
                 write_db(data)
                 return self.send_json(ride, 201)
