@@ -238,3 +238,8 @@ body>.brand strong{font-size:14px!important;color:#fff!important}body>.brand sma
 #passengerPanel>#passengerIdle:not(.route-open) .where-to-float{margin:10px 0 0!important;text-align:left!important;align-self:flex-start!important;max-width:280px!important}
 .home-history{display:block!important;margin:10px auto 0!important;width:min(590px,100%)!important;max-width:590px!important;background:#101010!important;border-color:#292929!important}
 .home-history .section-heading{margin-bottom:8px!important}.home-history #historyList{min-height:24px}.home-history #historyList .map-caption{margin:4px 0!important}
+
+/* Para onde vamos acima do mini mapa; mapa centralizado abaixo. */
+#passengerPanel>#passengerIdle{order:1!important}
+#passengerPanel>#mapPanel{order:2!important}
+#passengerPanel>#mapPanel.idle-nearby-map{margin:10px auto 0!important}
