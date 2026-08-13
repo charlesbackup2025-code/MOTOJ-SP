@@ -229,3 +229,12 @@ body>.brand strong{font-size:14px!important;color:#fff!important}body>.brand sma
 #passengerPanel>#mapPanel:not(.idle-nearby-map){display:none!important}
 body>.brand strong{font-size:14px!important;color:#fff!important}body>.brand small{display:none!important}
 @media(max-width:560px){body>.brand{left:112px!important;padding:7px 9px!important}body>.brand strong{font-size:12px!important}}
+
+/* Primeira aba: mini mapa, botão Para onde vamos e Suas viagens no final. */
+#passengerPanel>#mapPanel{order:1!important}
+#passengerPanel>#passengerIdle{order:2!important}
+#passengerPanel>#mapPanel.idle-nearby-map{display:block!important}
+#passengerPanel>#mapPanel:not(.idle-nearby-map){display:none!important}
+#passengerPanel>#passengerIdle:not(.route-open) .where-to-float{margin:10px 0 0!important;text-align:left!important;align-self:flex-start!important;max-width:280px!important}
+.home-history{display:block!important;margin:10px auto 0!important;width:min(590px,100%)!important;max-width:590px!important;background:#101010!important;border-color:#292929!important}
+.home-history .section-heading{margin-bottom:8px!important}.home-history #historyList{min-height:24px}.home-history #historyList .map-caption{margin:4px 0!important}
