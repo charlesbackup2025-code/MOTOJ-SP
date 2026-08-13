@@ -94,7 +94,7 @@ def write_db(data):
 
 
 def public_profile(profile):
-    return {k: v for k, v in profile.items() if k not in {"pin_salt", "pin_hash", "cpf", "birth_date", "background_check_consent_at"}}
+    return {k: v for k, v in profile.items() if k not in {"pin_salt", "pin_hash", "cpf", "birth_date", "background_check_consent_at", "face_consent_at"}}
 
 
 def admin_profile(profile):
@@ -105,11 +105,16 @@ def admin_profile(profile):
     result["documents_count"] = len(result["documents"])
     result["birth_date"] = profile.get("birth_date")
     result["background_check_status"] = profile.get("background_check_status", "not_required")
+    result["face_verification_status"] = profile.get("face_verification_status", "not_required")
     return result
 
 
 def make_pin_hash(pin, salt_hex):
     return hashlib.pbkdf2_hmac("sha256", pin.encode("utf-8"), bytes.fromhex(salt_hex), PBKDF2_ROUNDS).hex()
+
+
+def valid_password(password):
+    return bool(re.fullmatch(r"(?=.{8,64}$)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).*", password))
 
 
 def token_for(profile_id):
@@ -290,9 +295,10 @@ class Handler(SimpleHTTPRequestHandler):
                     profile = next((p for p in data["profiles"] if p["id"] == match_admin.group(1)), None)
                     status = payload.get("status")
                     if not profile or status not in {"approved", "rejected", "pending"}: return self.send_json({"error": "Perfil ou status inválido"}, 400)
-                    if status == "approved" and len(profile.get("documents", [])) < 4: return self.send_json({"error": "Envie RG, CNH, carteira de trabalho e foto antes de aprovar"}, 400)
+                    if status == "approved" and len(profile.get("documents", [])) < 5: return self.send_json({"error": "Envie RG, CNH, carteira, foto e selfie antes de aprovar"}, 400)
                     if status == "approved" and profile.get("background_check_status") not in {"pending_review", "approved"}: return self.send_json({"error": "A verificação de antecedentes precisa estar autorizada"}, 400)
-                    profile["verification_status"] = status; profile["verification_note"] = str(payload.get("note", ""))[:300]; profile["background_check_status"] = "approved" if status == "approved" else ("rejected" if status == "rejected" else profile.get("background_check_status", "pending_review")); profile["updated_at"] = now(); write_db(data)
+                    if status == "approved" and profile.get("face_verification_status") not in {"pending_review", "approved"}: return self.send_json({"error": "O reconhecimento facial precisa estar autorizado"}, 400)
+                    profile["verification_status"] = status; profile["verification_note"] = str(payload.get("note", ""))[:300]; profile["background_check_status"] = "approved" if status == "approved" else ("rejected" if status == "rejected" else profile.get("background_check_status", "pending_review")); profile["face_verification_status"] = "approved" if status == "approved" else ("rejected" if status == "rejected" else profile.get("face_verification_status", "pending_review")); profile["updated_at"] = now(); write_db(data)
                     return self.send_json(admin_profile(profile))
                 match_status = re.fullmatch(r"/api/admin/profiles/([A-Za-z0-9]+)/status", parsed.path)
                 if match_status:
@@ -301,27 +307,29 @@ class Handler(SimpleHTTPRequestHandler):
                     profile["account_status"] = status; profile["updated_at"] = now(); write_db(data); return self.send_json(admin_profile(profile))
                 return self.send_json({"error": "Rota administrativa não encontrada"}, 404)
             if parsed.path == "/api/auth/register":
-                name, phone, pin = str(payload.get("name", "")).strip(), str(payload.get("phone", "")).strip(), str(payload.get("pin", "")).strip()
+                name, phone = str(payload.get("name", "")).strip(), str(payload.get("phone", "")).strip()
+                pin = str(payload.get("password", payload.get("pin", ""))).strip()
                 role = payload.get("role", "passenger")
                 cpf = re.sub(r"\D", "", str(payload.get("cpf", "")))
                 birth_date = str(payload.get("birth_date", "")).strip()
                 background_consent = bool(payload.get("background_check_consent"))
+                face_consent = bool(payload.get("face_consent"))
                 plate = re.sub(r"[^A-Za-z0-9]", "", str(payload.get("plate", ""))).upper()
-                if not name or not phone or not re.fullmatch(r"\d{4,6}", pin):
-                    return self.send_json({"error": "Nome, celular e PIN válido são obrigatórios"}, 400)
-                if role == "driver" and (len(cpf) != 11 or len(plate) < 7 or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", birth_date) or not background_consent):
-                    return self.send_json({"error": "Motorista precisa informar CPF, placa, data de nascimento e autorizar a verificação"}, 400)
+                if not name or not phone or not valid_password(pin):
+                    return self.send_json({"error": "Nome, celular e senha forte de 8 caracteres são obrigatórios"}, 400)
+                if role == "driver" and (len(cpf) != 11 or len(plate) < 7 or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", birth_date) or not background_consent or not face_consent):
+                    return self.send_json({"error": "Motorista precisa informar CPF, placa, data, autorizar antecedentes e reconhecimento facial"}, 400)
                 if any(p.get("phone") == phone for p in data["profiles"]):
                     return self.send_json({"error": "Celular já cadastrado"}, 409)
                 salt = secrets.token_hex(16)
-                profile = {"id": uuid.uuid4().hex[:12], "name": name, "phone": phone, "role": role, "cpf": cpf or None, "birth_date": birth_date or None, "plate": plate or None, "background_check_status": "pending_review" if role == "driver" else "not_required", "background_check_consent_at": now() if role == "driver" and background_consent else None, "verification_status": "pending" if role == "driver" else "not_required", "account_status": "active", "reports_count": 0, "pin_salt": salt, "pin_hash": make_pin_hash(pin, salt), "created_at": now()}
+                profile = {"id": uuid.uuid4().hex[:12], "name": name, "phone": phone, "role": role, "cpf": cpf or None, "birth_date": birth_date or None, "plate": plate or None, "background_check_status": "pending_review" if role == "driver" else "not_required", "background_check_consent_at": now() if role == "driver" and background_consent else None, "face_verification_status": "pending_review" if role == "driver" else "not_required", "face_consent_at": now() if role == "driver" and face_consent else None, "verification_status": "pending" if role == "driver" else "not_required", "account_status": "active", "reports_count": 0, "pin_salt": salt, "pin_hash": make_pin_hash(pin, salt), "created_at": now()}
                 data["profiles"].append(profile); write_db(data)
                 return self.send_json({"token": token_for(profile["id"]), "profile": public_profile(profile)}, 201)
             if parsed.path == "/api/auth/login":
-                phone, pin = str(payload.get("phone", "")).strip(), str(payload.get("pin", "")).strip()
+                phone, pin = str(payload.get("phone", "")).strip(), str(payload.get("password", payload.get("pin", ""))).strip()
                 profile = next((p for p in data["profiles"] if p.get("phone") == phone), None)
-                if not profile or not re.fullmatch(r"\d{4,6}", pin) or not hmac.compare_digest(profile.get("pin_hash", ""), make_pin_hash(pin, profile.get("pin_salt", ""))):
-                    return self.send_json({"error": "Celular ou PIN inválido"}, 401)
+                if not profile or not valid_password(pin) or not hmac.compare_digest(profile.get("pin_hash", ""), make_pin_hash(pin, profile.get("pin_salt", ""))):
+                    return self.send_json({"error": "Celular ou senha inválida"}, 401)
                 profile.setdefault("verification_status", "not_required" if profile.get("role") != "driver" else "pending")
                 return self.send_json({"token": token_for(profile["id"]), "profile": public_profile(profile)})
             if parsed.path == "/api/auth/logout":
