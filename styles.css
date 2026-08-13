@@ -58,3 +58,7 @@ body{background:#050505;color:#f7f7f7}.topbar{background:#000;border-bottom:1px 
 
 /* Padronização entre passageiro e motorista */
 #driverPanel{max-width:560px;padding:16px}.driver-head h2{font-size:20px}.driver-request h3{font-size:18px}.brand{transition:opacity .22s ease,transform .22s ease}.brand.logo-hidden{opacity:0;transform:translateY(18px);pointer-events:none}
+/* Último refinamento da solicitação */
+#rideForm #origin,#rideForm #destination{padding:10px 12px;font-size:13px;height:42px}#rideForm .input-action button{height:42px}.left-header-tools{gap:0}.settings-btn,.settings-menu{display:none!important}
+/* Último refinamento da solicitação */
+#rideForm #origin,#rideForm #destination{padding:10px 12px;font-size:13px;height:42px}#rideForm .input-action button{height:42px}.left-header-tools{gap:0}.settings-btn,.settings-menu{display:none!important}
