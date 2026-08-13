@@ -23,10 +23,15 @@ import os
 import sqlite3
 import base64
 import math
+import copy
 try:
     from pywebpush import webpush
 except ImportError:
     webpush = None
+try:
+    from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+except ImportError:
+    AESGCM = None
 try:
     from payments import create_pix, create_preference, get_payment, PUBLIC_KEY as MP_PUBLIC_KEY
 except ImportError:
@@ -37,12 +42,13 @@ DB = Path(os.getenv("DATA_FILE", str(ROOT / "data.json")))
 SQLITE_FILE = Path(os.getenv("SQLITE_FILE", str(ROOT / "motoja.sqlite3")))
 UPLOAD_DIR = Path(os.getenv("UPLOAD_DIR", str(ROOT / "uploads")))
 STORAGE = os.getenv("STORAGE", "sqlite").lower()
-CORS_ORIGIN = os.getenv("CORS_ORIGIN", "*")
 ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "motoja-admin-demo")
 VAPID_PUBLIC_KEY = os.getenv("VAPID_PUBLIC_KEY", "")
 VAPID_PRIVATE_KEY = os.getenv("VAPID_PRIVATE_KEY", "")
 VAPID_SUBJECT = os.getenv("VAPID_SUBJECT", "mailto:admin@motorja.local")
 MP_WEBHOOK_SECRET = os.getenv("MP_WEBHOOK_SECRET", "")
+CORS_ORIGIN = os.getenv("CORS_ORIGIN", "https://motoja-sp-app.onrender.com")
+ENCRYPTION_KEY = os.getenv("MOTOJA_ENCRYPTION_KEY", "")
 LOCK = threading.Lock()
 SESSIONS = {}
 PBKDF2_ROUNDS = 180_000
@@ -67,10 +73,66 @@ def init_storage():
         conn.commit()
 
 
+SENSITIVE_PROFILE_FIELDS = {"name", "phone", "email", "cpf", "birth_date", "plate", "background_check_consent_at", "face_consent_at"}
+SENSITIVE_RIDE_FIELDS = {"origin", "destination", "passenger_id", "driver_id"}
+SENSITIVE_PAYMENT_FIELDS = {"qr_code", "qr_code_base64", "checkout_url"}
+
+def _cipher():
+    if not AESGCM or not ENCRYPTION_KEY:
+        return None
+    try:
+        raw = base64.urlsafe_b64decode(ENCRYPTION_KEY + "=" * (-len(ENCRYPTION_KEY) % 4))
+        return AESGCM(raw if len(raw) in (16, 24, 32) else hashlib.sha256(ENCRYPTION_KEY.encode()).digest())
+    except Exception:
+        return AESGCM(hashlib.sha256(ENCRYPTION_KEY.encode()).digest())
+
+def _seal(value):
+    if value is None or isinstance(value, bool) or not _cipher() or (isinstance(value, str) and value.startswith("enc$")): return value
+    raw = json.dumps(value, ensure_ascii=False).encode("utf-8")
+    nonce = secrets.token_bytes(12)
+    return "enc$" + base64.urlsafe_b64encode(nonce + _cipher().encrypt(nonce, raw, None)).decode("ascii")
+
+def _unseal(value):
+    if not isinstance(value, str) or not value.startswith("enc$") or not _cipher(): return value
+    try:
+        packed = base64.urlsafe_b64decode(value[4:])
+        nonce, ciphertext = packed[:12], packed[12:]
+        return json.loads(_cipher().decrypt(nonce, ciphertext, None).decode("utf-8"))
+    except Exception:
+        return value
+
+def _protect_data(data, encrypt=True):
+    result = copy.deepcopy(data)
+    transform = _seal if encrypt else _unseal
+    for profile in result.get("profiles", []):
+        for field in SENSITIVE_PROFILE_FIELDS:
+            if field in profile: profile[field] = transform(profile[field])
+        for doc in profile.get("documents", []):
+            for field in ("filename", "stored"):
+                if field in doc: doc[field] = transform(doc[field])
+    for ride in result.get("rides", []):
+        for field in SENSITIVE_RIDE_FIELDS:
+            if field in ride: ride[field] = transform(ride[field])
+        payment = ride.get("payment") or {}
+        for field in SENSITIVE_PAYMENT_FIELDS:
+            if field in payment: payment[field] = transform(payment[field])
+    return result
+
+def _decrypt_file(raw):
+    if not _cipher() or not raw.startswith(b"MOTOJA1") : return raw
+    nonce, ciphertext = raw[7:19], raw[19:]
+    try: return _cipher().decrypt(nonce, ciphertext, None)
+    except Exception: return raw
+
+def _encrypt_file(raw):
+    if not _cipher(): return raw
+    nonce = secrets.token_bytes(12)
+    return b"MOTOJA1" + nonce + _cipher().encrypt(nonce, raw, None)
+
 def read_db():
     if STORAGE == "json":
         if not DB.exists(): return {"profiles": [], "rides": []}
-        try: return json.loads(DB.read_text(encoding="utf-8"))
+        try: return _protect_data(json.loads(DB.read_text(encoding="utf-8")), encrypt=False)
         except (ValueError, OSError): return {"profiles": [], "rides": []}
     init_storage()
     with sqlite3.connect(SQLITE_FILE) as conn:
@@ -80,16 +142,17 @@ def read_db():
 
 
 def write_db(data):
+    stored_data = _protect_data(data, encrypt=True)
     if STORAGE == "json":
         temp = DB.with_suffix(".tmp")
-        temp.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+        temp.write_text(json.dumps(stored_data, ensure_ascii=False, indent=2), encoding="utf-8")
         temp.replace(DB)
         return
     init_storage()
     with sqlite3.connect(SQLITE_FILE) as conn:
         conn.execute("DELETE FROM profiles"); conn.execute("DELETE FROM rides")
-        conn.executemany("INSERT INTO profiles(id,payload) VALUES (?,?)", [(p["id"], json.dumps(p, ensure_ascii=False)) for p in data["profiles"]])
-        conn.executemany("INSERT INTO rides(id,payload) VALUES (?,?)", [(r["id"], json.dumps(r, ensure_ascii=False)) for r in data["rides"]])
+        conn.executemany("INSERT INTO profiles(id,payload) VALUES (?,?)", [(p["id"], json.dumps(p, ensure_ascii=False)) for p in stored_data["profiles"]])
+        conn.executemany("INSERT INTO rides(id,payload) VALUES (?,?)", [(r["id"], json.dumps(r, ensure_ascii=False)) for r in stored_data["rides"]])
         conn.commit()
 
 
@@ -171,6 +234,9 @@ class Handler(SimpleHTTPRequestHandler):
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("X-Frame-Options", "DENY")
         self.send_header("Referrer-Policy", "strict-origin-when-cross-origin")
+        self.send_header("Permissions-Policy", "camera=(self), geolocation=(self), microphone=()")
+        self.send_header("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
+        self.send_header("Content-Security-Policy", "default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: https://*.tile.openstreetmap.org; connect-src 'self' https://motoja-sp-api.onrender.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'")
         super().end_headers()
 
     def send_json(self, payload, status=200):
@@ -185,7 +251,7 @@ class Handler(SimpleHTTPRequestHandler):
     def do_OPTIONS(self):
         self.send_response(204)
         self.send_header("Access-Control-Allow-Origin", CORS_ORIGIN)
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Admin-Token")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.end_headers()
 
@@ -206,7 +272,7 @@ class Handler(SimpleHTTPRequestHandler):
                     if not found: return self.send_json({"error": "Documento não encontrado"}, 404)
                     path = Path(found[1].get("stored", ""))
                     if not path.exists(): return self.send_json({"error": "Arquivo indisponível"}, 404)
-                    raw = path.read_bytes(); self.send_response(200); self.send_header("Content-Type", "application/pdf" if path.suffix == ".pdf" else "image/jpeg"); self.send_header("Content-Length", str(len(raw))); self.send_header("Access-Control-Allow-Origin", CORS_ORIGIN); self.end_headers(); self.wfile.write(raw); return
+                    raw = _decrypt_file(path.read_bytes()); self.send_response(200); self.send_header("Content-Type", "application/pdf" if str(found[1].get("filename","")).lower().endswith(".pdf") else "image/jpeg"); self.send_header("Content-Length", str(len(raw))); self.send_header("Access-Control-Allow-Origin", CORS_ORIGIN); self.end_headers(); self.wfile.write(raw); return
                 if parsed.path == "/api/admin/stats":
                     finished=[r for r in data["rides"] if r.get("status")=="finished"]
                     rated=[r for r in data["rides"] if r.get("rating")]
@@ -283,8 +349,8 @@ class Handler(SimpleHTTPRequestHandler):
                 try: raw = base64.b64decode(raw_text, validate=True)
                 except (ValueError, base64.binascii.Error): return self.send_json({"error": "Arquivo inválido"}, 400)
                 if len(raw) > 5_000_000: return self.send_json({"error": "Cada documento deve ter no máximo 5 MB"}, 400)
-                suffix = ".pdf" if filename.lower().endswith(".pdf") else ".jpg"
-                UPLOAD_DIR.mkdir(parents=True, exist_ok=True); doc_id = uuid.uuid4().hex[:12]; stored = UPLOAD_DIR / f"{doc_id}{suffix}"; stored.write_bytes(raw)
+                suffix = ".enc" if _cipher() else (".pdf" if filename.lower().endswith(".pdf") else ".jpg")
+                UPLOAD_DIR.mkdir(parents=True, exist_ok=True); doc_id = uuid.uuid4().hex[:12]; stored = UPLOAD_DIR / f"{doc_id}{suffix}"; stored.write_bytes(_encrypt_file(raw))
                 doc = {"id": doc_id, "kind": kind[:40], "filename": filename[:120], "stored": str(stored), "status": "pending", "created_at": now()}
                 profile.setdefault("documents", []).append(doc); write_db(data)
                 return self.send_json({k: doc[k] for k in ("id", "kind", "filename", "status", "created_at")}, 201)
