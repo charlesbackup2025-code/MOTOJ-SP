@@ -384,3 +384,9 @@ body.login-open .profile-panel .primary{font-size:13px!important;padding:12px!im
 .trust-row,.demo-note{display:none!important}
 body.registration-open .trust-row{display:flex!important;justify-content:center!important;text-align:center!important}
 body.registration-open .demo-note{display:block!important;text-align:center!important}
+/* Endereços salvos no layout aberto original, sem aba recolhível. */
+#passengerPanel #savedAddresses{display:flex!important;flex-direction:row!important;align-items:center!important;gap:6px!important;flex-wrap:wrap!important}
+#passengerPanel #savedAddresses>span{display:block!important;width:100%!important}
+#passengerPanel #savedAddresses .saved-address-options,#passengerPanel #savedAddresses .saved-address-options.hidden{display:none!important}
+#passengerPanel #savedAddresses .saved-toggle{display:none!important}
+#passengerPanel #savedAddresses>[data-saved-slot],#passengerPanel #savedAddresses>#savedGpsBtn{display:inline-flex!important}
