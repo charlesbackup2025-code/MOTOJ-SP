@@ -320,3 +320,12 @@ body>.brand{left:12px!important;right:auto!important;top:auto!important;bottom:1
 #passengerPanel.passenger-map-active #passengerActive .actions button{flex:1 1 120px!important;min-height:42px!important}
 .history-panel{display:none!important}.history-panel.menu-visible{display:block!important}
 @media(max-width:560px){#passengerPanel.passenger-map-active #mapPanel #map{height:190px!important;min-height:190px!important}}
+/* Mensagem fixa, centralizada no topo, ao lado do avatar/configurações. */
+body>.brand{display:none!important}
+.hero{display:none!important}
+.topbar{min-height:72px!important;position:sticky!important;z-index:20!important}
+.topbar-copy{position:absolute!important;left:50%!important;top:7px!important;transform:translateX(-50%)!important;width:min(430px,calc(100% - 150px))!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:1px!important;text-align:center!important;line-height:1.12!important;pointer-events:none!important}
+.topbar-copy strong{font-size:18px!important;line-height:1.05!important;color:#fff!important;font-weight:900!important}
+.topbar-copy span{font-size:9px!important;letter-spacing:.12em!important;color:#ddd!important;font-weight:800!important}
+.topbar-copy small{font-size:10px!important;color:#aaa!important;font-weight:600!important}
+@media(max-width:560px){.topbar{min-height:62px!important}.topbar-copy{top:6px!important;width:calc(100% - 118px)!important}.topbar-copy strong{font-size:14px!important}.topbar-copy span{font-size:7px!important;letter-spacing:.08em!important}.topbar-copy small{font-size:8px!important}}
