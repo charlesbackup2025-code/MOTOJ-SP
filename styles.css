@@ -397,3 +397,16 @@ body.registration-open .demo-note{display:block!important;text-align:center!impo
 #passengerPanel>#passengerIdle:not(.route-open) .where-to-float{background:#000!important;color:#fff!important;border:1px solid #fff!important;min-height:78px!important;border-radius:14px!important;text-align:center!important;font-size:16px!important;font-weight:850!important}
 #passengerPanel>#passengerIdle:not(.route-open) .where-to-float:hover{background:#171717!important}
 @media(max-width:560px){#passengerPanel>#passengerIdle:not(.route-open) .where-to-float{min-height:70px!important;font-size:15px!important}}
+/* Mini mapa primeiro, botão Para onde vamos logo abaixo, com visual de chamada. */
+#passengerPanel:not(.passenger-map-active) #passengerIdle:not(.route-open) #mapPanel{display:block!important;position:relative!important;order:0!important;width:100%!important;margin:0 0 10px!important;padding:10px!important;border-radius:15px!important}
+#passengerPanel:not(.passenger-map-active) #passengerIdle:not(.route-open) #mapPanel #map{height:190px!important;min-height:190px!important;border-radius:12px!important}
+#passengerPanel:not(.passenger-map-active) #passengerIdle:not(.route-open) .where-to-float{order:1!important;margin:8px auto 0!important}
+#passengerPanel.passenger-map-active #passengerActive{padding:4px!important}
+#passengerPanel.passenger-map-active #passengerActive .ride-card{padding:20px!important;min-height:210px!important}
+#passengerPanel.passenger-map-active #passengerActive .ride-status{padding:12px 0!important}
+#passengerPanel.passenger-map-active #passengerActive .ride-status strong{font-size:16px!important}
+#passengerPanel.passenger-map-active #passengerActive .driver-info{padding:12px!important;margin-top:12px!important}
+#passengerPanel #rideForm .field input,#passengerPanel #rideForm .field select{width:100%!important;box-sizing:border-box!important}
+#passengerPanel #rideForm .input-action{width:100%!important}
+#passengerPanel #rideForm button{min-height:40px!important}
+@media(max-width:560px){#passengerPanel:not(.passenger-map-active) #passengerIdle:not(.route-open) #mapPanel #map{height:165px!important;min-height:165px!important}#passengerPanel.passenger-map-active #passengerActive .ride-card{padding:15px!important}}
