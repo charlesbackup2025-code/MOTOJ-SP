@@ -303,3 +303,20 @@ body>.brand{left:12px!important;right:auto!important;top:auto!important;bottom:1
 /* Botão Para onde vamos centralizado acima de Suas viagens e do mini mapa. */
 #passengerPanel>#passengerIdle:not(.route-open) .where-to-float{align-self:center!important;margin:10px auto!important;text-align:center!important}
 .home-history{margin-top:10px!important}
+
+#historyPanel.home-history{width:min(590px,100%)!important;margin:10px auto!important;text-align:center!important}
+#mapPanel.idle-nearby-map{margin-left:auto!important;margin-right:auto!important}
+/* Fluxo após login: Para onde vamos → Solicitar → Aguardando motorista. */
+#passengerPanel:not(.passenger-map-active) #passengerIdle:not(.route-open) #mapPanel{display:block!important;width:100%!important;margin:0 0 10px!important}
+#passengerPanel:not(.passenger-map-active) #passengerIdle:not(.route-open) .where-to-float{display:block!important;width:100%!important}
+#passengerPanel.passenger-map-active{display:flex!important;flex-direction:column!important}
+#passengerPanel.passenger-map-active #mapPanel{display:block!important;order:-2!important;width:100%!important;margin:0 0 14px!important;padding:10px!important;border-radius:14px!important}
+#passengerPanel.passenger-map-active #mapPanel #map{height:230px!important;min-height:230px!important;border-radius:12px!important}
+#passengerPanel.passenger-map-active #passengerActive{display:block!important;order:1!important;width:100%!important}
+#passengerPanel.passenger-map-active #passengerActive .ride-card{padding:16px!important;border-radius:14px!important}
+#passengerPanel.passenger-map-active #passengerActive .ride-status strong{font-size:16px!important}
+#passengerPanel.passenger-map-active #passengerActive .driver-info{padding:12px!important;margin-top:12px!important}
+#passengerPanel.passenger-map-active #passengerActive .actions{display:flex!important;flex-wrap:wrap!important;gap:7px!important}
+#passengerPanel.passenger-map-active #passengerActive .actions button{flex:1 1 120px!important;min-height:42px!important}
+.history-panel{display:none!important}.history-panel.menu-visible{display:block!important}
+@media(max-width:560px){#passengerPanel.passenger-map-active #mapPanel #map{height:190px!important;min-height:190px!important}}
