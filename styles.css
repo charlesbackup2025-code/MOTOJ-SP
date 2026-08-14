@@ -358,3 +358,16 @@ body.login-open .profile-panel .primary{font-size:13px!important;padding:12px!im
 #passengerPanel.passenger-map-active #passengerActive .ride-details{font-size:12px!important}
 #passengerPanel.passenger-map-active #passengerActive .search-metrics{font-size:11px!important}
 @media(max-width:560px){#passengerPanel #rideForm .ride-option{padding:6px 7px!important}.saved-address-options button{font-size:9px!important;padding:6px 7px!important}}
+/* Ajustes visuais finais da etapa de endereço e categorias. */
+#passengerPanel #savedAddresses{display:flex!important;flex-direction:column!important;align-items:stretch!important}
+#passengerPanel #savedAddresses .saved-address-options{order:1!important;margin:0 0 6px!important}
+#passengerPanel #savedAddresses .saved-toggle{order:2!important}
+#passengerPanel #savedAddresses .saved-address-options.hidden{display:none!important}
+#passengerPanel #rideForm .ride-options{width:min(430px,100%)!important;margin:8px auto!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important}
+#passengerPanel #rideForm .ride-option{min-height:40px!important;padding:6px 8px!important;border-radius:8px!important}
+#passengerPanel #rideForm .ride-option strong{font-size:11px!important}
+#passengerPanel #rideForm .ride-option small{font-size:9px!important}
+#passengerPanel #rideForm .ride-option b{font-size:11px!important}
+#passengerPanel #rideForm .ride-icon{width:24px!important;height:24px!important;font-size:13px!important}
+#passengerPanel>#passengerIdle:not(.route-open) .where-to-float{min-height:82px!important;padding:24px 22px!important;border-radius:18px!important;font-size:16px!important;font-weight:850!important;line-height:1.2!important;background:#000!important}
+@media(max-width:560px){#passengerPanel #rideForm .ride-options{width:100%!important}.passengerPanel #rideForm .ride-option{min-height:38px!important}#passengerPanel>#passengerIdle:not(.route-open) .where-to-float{min-height:72px!important;padding:20px 16px!important;font-size:15px!important}}
