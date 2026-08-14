@@ -380,3 +380,7 @@ body.login-open .profile-panel .primary{font-size:13px!important;padding:12px!im
 .profile-panel .section-heading>div{justify-content:center!important}
 .profile-panel .section-heading h2,.profile-panel .section-heading .step{ text-align:center!important}
 @media(max-width:560px){.hero{padding-left:4px!important;padding-right:4px!important}}
+/* Informações institucionais somente na tela de cadastro. */
+.trust-row,.demo-note{display:none!important}
+body.registration-open .trust-row{display:flex!important;justify-content:center!important;text-align:center!important}
+body.registration-open .demo-note{display:block!important;text-align:center!important}
