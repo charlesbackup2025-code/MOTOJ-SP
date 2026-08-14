@@ -431,3 +431,8 @@ body.logged-in .hero .eyebrow{font-size:10px!important;letter-spacing:.12em!impo
 #passengerPanel.passenger-map-active{border-color:#292929!important;background:#101010!important;box-shadow:0 8px 28px rgba(0,0,0,.28)!important}
 #passengerPanel.passenger-map-active #passengerActive{margin-top:4px!important}
 #passengerPanel.passenger-map-active #passengerActive .ride-status{border-bottom:1px solid #292929!important;padding-bottom:14px!important}
+/* Remoção das linhas e sombras cinzas de fundo em todas as abas. */
+.panel,.panel:hover{border-color:transparent!important;box-shadow:none!important}
+#profilePanel,#passengerPanel,#driverPanel,#paymentPanel,#ratingPanel,#historyPanel,#mapPanel{border-color:transparent!important;box-shadow:none!important}
+#passengerPanel.passenger-map-active{border-color:transparent!important;box-shadow:none!important}
+#passengerPanel.passenger-map-active #passengerActive .ride-status{border-bottom-color:transparent!important}
