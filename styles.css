@@ -423,3 +423,8 @@ body>.brand{display:none!important}
 #passengerPanel.passenger-map-active #passengerActive .actions #cancelRide{grid-column:1/-1!important;justify-self:center!important;width:150px!important;min-height:34px!important;padding:7px 10px!important;font-size:10px!important}
 #passengerPanel.passenger-map-active #passengerActive .actions #emergencyRide,#passengerPanel.passenger-map-active #passengerActive .actions #shareRide{min-height:34px!important;padding:7px 8px!important;font-size:10px!important}
 .trust-row{display:none!important}
+/* Botões de segurança e cancelamento com toque mais confortável. */
+#passengerPanel.passenger-map-active #passengerActive .actions #emergencyRide{min-height:46px!important;padding:11px 16px!important;font-size:13px!important;font-weight:900!important}
+#passengerPanel.passenger-map-active #passengerActive .actions #cancelRide{width:220px!important;min-height:48px!important;padding:12px 18px!important;font-size:13px!important;font-weight:900!important}
+#passengerPanel.passenger-map-active #passengerActive .actions #emergencyRide:focus-visible,#passengerPanel.passenger-map-active #passengerActive .actions #cancelRide:focus-visible{outline:3px solid #fff!important;outline-offset:3px!important}
+@media(max-width:560px){#passengerPanel.passenger-map-active #passengerActive .actions #cancelRide{width:min(220px,100%)!important}}
