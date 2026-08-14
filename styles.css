@@ -349,3 +349,12 @@ body>.brand{display:none!important}
 .topbar-copy span{font-size:14px!important;letter-spacing:.11em!important}
 .topbar-copy small{font-size:11px!important}
 @media(max-width:560px){.topbar-copy{width:calc(100% - 104px)!important}.topbar-copy strong{font-size:15px!important}.topbar-copy span{font-size:10px!important;letter-spacing:.06em!important}.topbar-copy small{font-size:9px!important}}
+/* Solicitação e espera mais rápidas e com atualização manual confiável. */
+#passengerPanel.passenger-map-active #passengerActive .actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+#passengerPanel.passenger-map-active #passengerActive .actions button{width:100%!important;min-height:44px!important;font-weight:800!important}
+#refreshRide{border-color:#555!important}
+#refreshRide:disabled{opacity:.55!important;cursor:wait!important}
+#passengerPanel.passenger-map-active #mapPanel{margin-bottom:12px!important}
+#passengerPanel.passenger-map-active #passengerActive .ride-card{overflow:hidden!important}
+#passengerPanel.passenger-map-active #passengerActive .route{margin:8px 0!important}
+@media(max-width:560px){#passengerPanel.passenger-map-active #passengerActive .actions{grid-template-columns:1fr 1fr!important}}
