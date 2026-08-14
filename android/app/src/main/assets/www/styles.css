@@ -361,3 +361,4 @@ body>.brand{display:none!important}
 /* PIN de segurança da corrida disponível em todas as modalidades. */
 #ridePinField{margin-top:6px!important}
 #ridePin{letter-spacing:.32em!important;text-align:center!important;font-weight:900!important;max-width:180px!important}
+#ridePinField{display:none!important}
