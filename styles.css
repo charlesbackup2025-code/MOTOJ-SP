@@ -344,3 +344,8 @@ body>.brand{display:none!important}
 .profile-panel .section-heading{margin-bottom:16px!important}
 .demo-note{display:none!important}
 @media(max-width:560px){.profile-panel{padding:16px!important}.profile-panel .field input,.profile-panel .field select,.profile-panel .field textarea{height:42px!important;min-height:42px!important;font-size:13px!important}}
+/* Cabeçalho ampliado em todas as abas. */
+.topbar-copy strong{font-size:18px!important}
+.topbar-copy span{font-size:14px!important;letter-spacing:.11em!important}
+.topbar-copy small{font-size:11px!important}
+@media(max-width:560px){.topbar-copy{width:calc(100% - 104px)!important}.topbar-copy strong{font-size:15px!important}.topbar-copy span{font-size:10px!important;letter-spacing:.06em!important}.topbar-copy small{font-size:9px!important}}
