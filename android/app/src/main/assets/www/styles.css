@@ -286,3 +286,6 @@ body>.brand{left:12px!important;right:auto!important;top:auto!important;bottom:1
 #registrationLoginBtn.hidden{display:none!important}
 #accountMenuBtn{position:fixed!important;left:12px!important;top:12px!important;z-index:1001!important}
 @media(max-width:560px){#registrationLoginBtn,#accountMenuBtn{left:10px!important;top:8px!important}}
+/* Botão Entrar/Sair volta ao layout original dentro do cabeçalho. */
+#registrationLoginBtn{position:static!important;left:auto!important;top:auto!important;z-index:auto!important;box-shadow:none!important}
+#accountMenuBtn{position:static!important;left:auto!important;top:auto!important;z-index:auto!important}
