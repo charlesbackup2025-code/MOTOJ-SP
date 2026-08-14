@@ -371,3 +371,12 @@ body.login-open .profile-panel .primary{font-size:13px!important;padding:12px!im
 #passengerPanel #rideForm .ride-icon{width:24px!important;height:24px!important;font-size:13px!important}
 #passengerPanel>#passengerIdle:not(.route-open) .where-to-float{min-height:82px!important;padding:24px 22px!important;border-radius:18px!important;font-size:16px!important;font-weight:850!important;line-height:1.2!important;background:#000!important}
 @media(max-width:560px){#passengerPanel #rideForm .ride-options{width:100%!important}.passengerPanel #rideForm .ride-option{min-height:38px!important}#passengerPanel>#passengerIdle:not(.route-open) .where-to-float{min-height:72px!important;padding:20px 16px!important;font-size:15px!important}}
+/* Textos iniciais e abas centralizados. */
+.hero{text-align:center!important}
+.hero .eyebrow,.hero h1,.hero p{text-align:center!important}
+.mode-switch{width:min(430px,100%)!important;margin-left:auto!important;margin-right:auto!important}
+.mode{justify-content:center!important;text-align:center!important}
+.profile-panel .section-heading{justify-content:center!important;text-align:center!important}
+.profile-panel .section-heading>div{justify-content:center!important}
+.profile-panel .section-heading h2,.profile-panel .section-heading .step{ text-align:center!important}
+@media(max-width:560px){.hero{padding-left:4px!important;padding-right:4px!important}}
