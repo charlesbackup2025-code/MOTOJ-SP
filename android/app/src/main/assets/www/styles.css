@@ -370,3 +370,23 @@ body>.brand{display:none!important}
 #savedAddresses{display:flex!important;justify-content:flex-start!important;align-items:center!important;margin:4px 0 8px!important}
 #savedAddresses .saved-gps{display:inline-flex!important;min-height:36px!important;padding:8px 14px!important;border-radius:9px!important}
 #rideForm>.primary[type=submit]{width:100%!important;min-height:44px!important;font-weight:850!important}
+
+/* UX final: GPS junto ao Embarque; mapa somente após confirmar a corrida. */
+#savedAddresses:empty{display:none!important}
+#boardingField>.field-label-row{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;margin-bottom:7px!important}
+#boardingField>.field-label-row>span{margin:0!important}
+#boardingField>.field-label-row .saved-gps{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:32px!important;padding:6px 12px!important;border-radius:8px!important;background:#171717!important;color:#eee!important;border:1px solid #444!important;font-size:11px!important;font-weight:850!important;line-height:1!important}
+#boardingField>.field-label-row .saved-gps:hover{background:#fff!important;color:#000!important}
+#passengerPanel:not(.passenger-map-active) #mapPanel{display:none!important}
+#passengerPanel.passenger-map-active>#mapPanel{display:block!important;order:0!important;width:100%!important;margin:0 0 12px!important}
+#passengerPanel.passenger-map-active>#passengerActive{display:block!important;order:1!important}
+#passengerPanel.passenger-map-active>#mapPanel #map{height:230px!important;min-height:230px!important}
+@media(max-width:560px){#passengerPanel.passenger-map-active>#mapPanel #map{height:190px!important;min-height:190px!important}}
+/* GPS diretamente à frente do campo Embarque; mapa somente na primeira aba e após solicitar. */
+#passengerPanel #rideForm #savedAddresses{order:0!important;width:100%!important;margin:0 0 8px!important}
+#passengerPanel #rideForm #boardingField{order:1!important}
+#passengerPanel #rideForm #destinationField{order:2!important}
+#passengerPanel #rideForm .ride-options,#passengerPanel #rideForm #paymentMethod,#passengerPanel #rideForm #dynamicOffer,#passengerPanel #rideForm>.primary{order:3!important}
+#passengerPanel #passengerIdle.route-open #mapPanel,#passengerPanel #passengerIdle.route-open #map{display:none!important}
+#passengerPanel:not(.passenger-map-active) #passengerIdle:not(.route-open) #mapPanel{display:block!important}
+#passengerPanel.passenger-map-active #mapPanel{display:block!important}
