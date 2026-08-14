@@ -329,3 +329,8 @@ body>.brand{display:none!important}
 .topbar-copy span{font-size:9px!important;letter-spacing:.12em!important;color:#ddd!important;font-weight:800!important}
 .topbar-copy small{font-size:10px!important;color:#aaa!important;font-weight:600!important}
 @media(max-width:560px){.topbar{min-height:62px!important}.topbar-copy{top:6px!important;width:calc(100% - 118px)!important}.topbar-copy strong{font-size:14px!important}.topbar-copy span{font-size:7px!important;letter-spacing:.08em!important}.topbar-copy small{font-size:8px!important}}
+/* Hierarquia tipográfica solicitada no cabeçalho. */
+.topbar-copy strong{font-size:13px!important;font-weight:800!important}
+.topbar-copy span{font-size:12px!important;letter-spacing:.11em!important;font-weight:900!important}
+.topbar-copy small{font-size:8px!important;font-weight:550!important}
+@media(max-width:560px){.topbar-copy strong{font-size:11px!important}.topbar-copy span{font-size:9px!important;letter-spacing:.07em!important}.topbar-copy small{font-size:7px!important}}
