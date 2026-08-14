@@ -296,3 +296,7 @@ body>.brand{left:12px!important;right:auto!important;top:auto!important;bottom:1
 
 .account-avatar{display:inline-grid!important;place-items:center!important;width:28px!important;height:28px!important;border-radius:50%!important;background:#fff!important;color:#000!important;font-weight:900!important;font-size:14px!important}
 .account-logout{border-top:1px solid #333!important;margin-top:6px!important;color:#fff!important;font-weight:800!important}
+/* Menu de configuração fixo no canto superior direito. */
+#accountMenuBtn{position:fixed!important;right:12px!important;left:auto!important;top:12px!important;z-index:1002!important;margin:0!important}
+#accountMenu{position:fixed!important;right:12px!important;left:auto!important;top:62px!important;z-index:1003!important}
+@media(max-width:560px){#accountMenuBtn{right:10px!important;top:8px!important}#accountMenu{right:10px!important;top:58px!important}}
