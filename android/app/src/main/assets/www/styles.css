@@ -428,3 +428,13 @@ body>.brand{display:none!important}
 #passengerPanel.passenger-map-active #passengerActive .actions #cancelRide{width:220px!important;min-height:48px!important;padding:12px 18px!important;font-size:13px!important;font-weight:900!important}
 #passengerPanel.passenger-map-active #passengerActive .actions #emergencyRide:focus-visible,#passengerPanel.passenger-map-active #passengerActive .actions #cancelRide:focus-visible{outline:3px solid #fff!important;outline-offset:3px!important}
 @media(max-width:560px){#passengerPanel.passenger-map-active #passengerActive .actions #cancelRide{width:min(220px,100%)!important}}
+/* Seções acessíveis dentro de cada item do menu, exceto Sair. */
+.account-section-panel{margin:8px 4px 3px!important;padding:12px!important;border:1px solid #333!important;border-radius:10px!important;background:#181818!important;color:#fff!important;font-size:11px!important;line-height:1.4!important}
+.account-section-panel strong{display:block!important;font-size:12px!important;margin-bottom:4px!important}
+.account-section-panel p{margin:0 0 9px!important;color:#bbb!important}
+.account-panel-close{width:100%!important;min-height:32px!important;padding:6px!important;border:1px solid #444!important;border-radius:7px!important;background:#000!important;color:#fff!important;font-size:10px!important}
+/* Tipografia maior e centralizada em todas as abas. */
+.topbar-copy strong{font-size:20px!important}
+.topbar-copy span{font-size:16px!important}
+.topbar-copy small{font-size:12px!important}
+@media(max-width:560px){.topbar-copy strong{font-size:16px!important}.topbar-copy span{font-size:11px!important}.topbar-copy small{font-size:9px!important}}
