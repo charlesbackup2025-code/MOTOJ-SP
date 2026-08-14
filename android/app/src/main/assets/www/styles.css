@@ -303,3 +303,6 @@ body>.brand{left:12px!important;right:auto!important;top:auto!important;bottom:1
 /* Botão Para onde vamos centralizado acima de Suas viagens e do mini mapa. */
 #passengerPanel>#passengerIdle:not(.route-open) .where-to-float{align-self:center!important;margin:10px auto!important;text-align:center!important}
 .home-history{margin-top:10px!important}
+
+#historyPanel.home-history{width:min(590px,100%)!important;margin:10px auto!important;text-align:center!important}
+#mapPanel.idle-nearby-map{margin-left:auto!important;margin-right:auto!important}
