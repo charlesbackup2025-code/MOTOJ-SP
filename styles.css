@@ -395,3 +395,6 @@ body>.brand{display:none!important}
 #passengerPanel.passenger-map-active #passengerActive .actions{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}
 #passengerPanel.passenger-map-active #passengerActive .actions button{min-height:44px!important;padding:9px 6px!important;font-size:11px!important}
 @media(max-width:560px){#passengerPanel.passenger-map-active #passengerActive .actions{grid-template-columns:1fr!important}}
+/* Mini mapa centralizado somente na primeira aba, abaixo de Para onde vamos. */
+#passengerPanel:not(.passenger-map-active) #passengerIdle:not(.route-open) #mapPanel.idle-nearby-map{display:block!important;width:min(560px,100%)!important;align-self:center!important;margin:10px auto 0!important}
+#passengerPanel:not(.passenger-map-active) #passengerIdle.route-open #mapPanel{display:none!important}
