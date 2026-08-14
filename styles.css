@@ -398,3 +398,5 @@ body>.brand{display:none!important}
 /* Mini mapa centralizado somente na primeira aba, abaixo de Para onde vamos. */
 #passengerPanel:not(.passenger-map-active) #passengerIdle:not(.route-open) #mapPanel.idle-nearby-map{display:block!important;width:min(560px,100%)!important;align-self:center!important;margin:10px auto 0!important}
 #passengerPanel:not(.passenger-map-active) #passengerIdle.route-open #mapPanel{display:none!important}
+#passengerPanel:not(.passenger-map-active) #passengerIdle:not(.route-open) #mapPanel.idle-nearby-map{display:block!important;order:2!important;text-align:center!important}
+#passengerPanel:not(.passenger-map-active) #passengerIdle:not(.route-open) #mapPanel.idle-nearby-map #map{margin:0 auto!important}
