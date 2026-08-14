@@ -438,3 +438,13 @@ body>.brand{display:none!important}
 .topbar-copy span{font-size:16px!important}
 .topbar-copy small{font-size:12px!important}
 @media(max-width:560px){.topbar-copy strong{font-size:16px!important}.topbar-copy span{font-size:11px!important}.topbar-copy small{font-size:9px!important}}
+/* Primeira aba limpa após autenticação e mapa apenas nos pontos corretos. */
+body.logged-in #profilePanel{display:none!important}
+body.logged-in #passengerPanel{display:block!important;visibility:visible!important;opacity:1!important}
+body.registration-open #passengerPanel{display:none!important}
+#passengerPanel:not(.passenger-map-active) #passengerIdle.route-open #mapPanel{display:none!important;visibility:hidden!important}
+#passengerPanel:not(.passenger-map-active) #passengerIdle:not(.route-open) #mapPanel.idle-nearby-map{display:block!important;visibility:visible!important;opacity:1!important}
+#passengerPanel.passenger-map-active #mapPanel.ride-map-active{display:block!important;visibility:visible!important;opacity:1!important}
+#passengerPanel #whereToBtn,#passengerPanel #rideForm>.primary{position:relative!important;z-index:2!important}
+#passengerPanel #rideForm>.primary{width:100%!important;min-height:46px!important}
+#passengerPanel.passenger-map-active #passengerActive .ride-card{width:100%!important;box-sizing:border-box!important}
