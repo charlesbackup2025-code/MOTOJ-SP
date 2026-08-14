@@ -390,3 +390,10 @@ body.registration-open .demo-note{display:block!important;text-align:center!impo
 #passengerPanel #savedAddresses .saved-address-options,#passengerPanel #savedAddresses .saved-address-options.hidden{display:none!important}
 #passengerPanel #savedAddresses .saved-toggle{display:none!important}
 #passengerPanel #savedAddresses>[data-saved-slot],#passengerPanel #savedAddresses>#savedGpsBtn{display:inline-flex!important}
+/* Categorias de moto em lista vertical e botão de destino preto com texto branco. */
+#passengerPanel #rideForm .ride-options{display:grid!important;grid-template-columns:1fr!important;width:min(430px,100%)!important;margin:10px auto!important;gap:6px!important}
+#passengerPanel #rideForm .ride-option{width:100%!important;min-height:42px!important;justify-content:flex-start!important}
+#passengerPanel #rideForm .ride-option strong{text-transform:uppercase!important;letter-spacing:.02em!important}
+#passengerPanel>#passengerIdle:not(.route-open) .where-to-float{background:#000!important;color:#fff!important;border:1px solid #fff!important;min-height:78px!important;border-radius:14px!important;text-align:center!important;font-size:16px!important;font-weight:850!important}
+#passengerPanel>#passengerIdle:not(.route-open) .where-to-float:hover{background:#171717!important}
+@media(max-width:560px){#passengerPanel>#passengerIdle:not(.route-open) .where-to-float{min-height:70px!important;font-size:15px!important}}
