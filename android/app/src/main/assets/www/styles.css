@@ -410,3 +410,13 @@ body.registration-open .demo-note{display:block!important;text-align:center!impo
 #passengerPanel #rideForm .input-action{width:100%!important}
 #passengerPanel #rideForm button{min-height:40px!important}
 @media(max-width:560px){#passengerPanel:not(.passenger-map-active) #passengerIdle:not(.route-open) #mapPanel #map{height:165px!important;min-height:165px!important}#passengerPanel.passenger-map-active #passengerActive .ride-card{padding:15px!important}}
+/* Cabeçalho textual padronizado próximo ao fluxo da conta/configurações. */
+.hero{width:min(760px,100%)!important;margin:0 auto!important;padding:10px 16px 14px!important;text-align:center!important}
+.hero h1{font-size:clamp(32px,5vw,46px)!important;line-height:1.05!important;color:#fff!important;margin:3px 0 7px!important;font-weight:900!important}
+.hero #heroText{display:flex!important;flex-direction:column!important;gap:2px!important;margin:0!important;line-height:1.25!important}
+.hero .hero-fast{font-size:13px!important;color:#d1d1d1!important;font-weight:650!important}
+.hero .hero-negotiate{font-size:12px!important;color:#aaa!important;font-weight:550!important}
+body.logged-in .hero{display:block!important}
+body.logged-in .hero .eyebrow{font-size:10px!important;letter-spacing:.12em!important}
+#passengerPanel #rideForm,#passengerPanel #rideForm label,#passengerPanel #rideForm button{font-family:Inter,ui-sans-serif,system-ui,sans-serif!important}
+@media(max-width:560px){.hero{padding-top:7px!important;padding-bottom:10px!important}.hero h1{font-size:32px!important}.hero .hero-fast{font-size:12px!important}.hero .hero-negotiate{font-size:11px!important}}
