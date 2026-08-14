@@ -358,3 +358,6 @@ body>.brand{display:none!important}
 #passengerPanel.passenger-map-active #passengerActive .ride-card{overflow:hidden!important}
 #passengerPanel.passenger-map-active #passengerActive .route{margin:8px 0!important}
 @media(max-width:560px){#passengerPanel.passenger-map-active #passengerActive .actions{grid-template-columns:1fr 1fr!important}}
+/* PIN de segurança da corrida disponível em todas as modalidades. */
+#ridePinField{margin-top:6px!important}
+#ridePin{letter-spacing:.32em!important;text-align:center!important;font-weight:900!important;max-width:180px!important}
