@@ -412,3 +412,6 @@ body>.brand{display:none!important}
 #passengerPanel.passenger-map-active #passengerActive .actions{grid-template-columns:repeat(3,minmax(0,1fr))!important}
 #passengerPanel.passenger-map-active #passengerActive #emergencyRide,#passengerPanel.passenger-map-active #passengerActive #shareRide{min-height:36px!important;padding:7px 5px!important;font-size:10px!important}
 @media(max-width:560px){#passengerPanel #savedAddresses .saved-gps,#passengerPanel #savedAddresses .saved-address-btn{min-width:54px!important;font-size:9px!important;padding:7px 5px!important}#passengerPanel.passenger-map-active #passengerActive .actions{grid-template-columns:1fr 1fr!important}}
+/* Informações de confiança sempre no final do conteúdo de cada aba. */
+.trust-row{order:999!important;width:100%!important;margin:20px auto 0!important;justify-content:center!important;text-align:center!important;flex-wrap:wrap!important;gap:12px 22px!important}
+.trust-row>div{font-size:11px!important;display:flex!important;align-items:center!important;gap:4px!important}
