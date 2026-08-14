@@ -400,3 +400,6 @@ body>.brand{display:none!important}
 #passengerPanel:not(.passenger-map-active) #passengerIdle.route-open #mapPanel{display:none!important}
 #passengerPanel:not(.passenger-map-active) #passengerIdle:not(.route-open) #mapPanel.idle-nearby-map{display:block!important;order:2!important;text-align:center!important}
 #passengerPanel:not(.passenger-map-active) #passengerIdle:not(.route-open) #mapPanel.idle-nearby-map #map{margin:0 auto!important}
+/* Mini mapa inicial com GPS do passageiro e motoristas online próximos. */
+#passengerPanel:not(.passenger-map-active) #passengerIdle:not(.route-open) #mapPanel.idle-nearby-map{display:block!important;visibility:visible!important;opacity:1!important}
+#passengerPanel:not(.passenger-map-active) #passengerIdle:not(.route-open) #mapPanel.idle-nearby-map .map-caption{text-align:center!important}
