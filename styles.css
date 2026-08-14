@@ -415,3 +415,10 @@ body>.brand{display:none!important}
 /* Informações de confiança sempre no final do conteúdo de cada aba. */
 .trust-row{order:999!important;width:100%!important;margin:20px auto 0!important;justify-content:center!important;text-align:center!important;flex-wrap:wrap!important;gap:12px 22px!important}
 .trust-row>div{font-size:11px!important;display:flex!important;align-items:center!important;gap:4px!important}
+/* GPS junto ao rótulo Embarque; sem endereços salvos. */
+.field-label-row{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important}
+.inline-gps{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:28px!important;padding:4px 9px!important;border-radius:7px!important;background:#171717!important;color:#fff!important;border:1px solid #444!important;font-size:10px!important;font-weight:850!important}
+.inline-gps:hover{background:#333!important}
+#savedAddresses{display:none!important}
+#passengerPanel.passenger-map-active #passengerActive .actions #cancelRide{grid-column:1/-1!important;justify-self:center!important;width:150px!important;min-height:34px!important;padding:7px 10px!important;font-size:10px!important}
+#passengerPanel.passenger-map-active #passengerActive .actions #emergencyRide,#passengerPanel.passenger-map-active #passengerActive .actions #shareRide{min-height:34px!important;padding:7px 8px!important;font-size:10px!important}
