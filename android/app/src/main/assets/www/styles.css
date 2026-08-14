@@ -289,3 +289,7 @@ body>.brand{left:12px!important;right:auto!important;top:auto!important;bottom:1
 /* Botão Entrar/Sair volta ao layout original dentro do cabeçalho. */
 #registrationLoginBtn{position:static!important;left:auto!important;top:auto!important;z-index:auto!important;box-shadow:none!important}
 #accountMenuBtn{position:static!important;left:auto!important;top:auto!important;z-index:auto!important}
+/* Sair/Entrar no canto superior esquerdo do cabeçalho. */
+.left-header-tools{position:absolute!important;left:max(18px,calc((100% - 960px)/2))!important;top:0!important;height:72px!important;display:flex!important;align-items:center!important}
+#registrationLoginBtn{position:static!important;margin:0!important}
+@media(max-width:560px){.left-header-tools{left:10px!important;height:56px!important}}
