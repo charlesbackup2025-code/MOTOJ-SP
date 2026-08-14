@@ -406,3 +406,9 @@ body>.brand{display:none!important}
 /* Para onde vamos abaixo do mini mapa inicial. */
 #passengerPanel:not(.passenger-map-active) #passengerIdle:not(.route-open) #mapPanel.idle-nearby-map{order:initial!important;margin:0 auto 10px!important}
 #passengerPanel:not(.passenger-map-active) #passengerIdle:not(.route-open) #whereToBtn{display:block!important;margin:8px auto 0!important}
+/* GPS com três atalhos de endereços salvos lado a lado. */
+#passengerPanel #savedAddresses{display:flex!important;align-items:center!important;gap:5px!important;flex-wrap:wrap!important}
+#passengerPanel #savedAddresses .saved-gps,#passengerPanel #savedAddresses .saved-address-btn{display:inline-flex!important;flex:1 1 0!important;min-width:62px!important;justify-content:center!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;border-radius:8px!important;padding:8px 7px!important;font-size:10px!important;min-height:36px!important}
+#passengerPanel.passenger-map-active #passengerActive .actions{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+#passengerPanel.passenger-map-active #passengerActive #emergencyRide,#passengerPanel.passenger-map-active #passengerActive #shareRide{min-height:36px!important;padding:7px 5px!important;font-size:10px!important}
+@media(max-width:560px){#passengerPanel #savedAddresses .saved-gps,#passengerPanel #savedAddresses .saved-address-btn{min-width:54px!important;font-size:9px!important;padding:7px 5px!important}#passengerPanel.passenger-map-active #passengerActive .actions{grid-template-columns:1fr 1fr!important}}
