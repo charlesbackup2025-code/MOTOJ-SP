@@ -420,3 +420,14 @@ body.logged-in .hero{display:block!important}
 body.logged-in .hero .eyebrow{font-size:10px!important;letter-spacing:.12em!important}
 #passengerPanel #rideForm,#passengerPanel #rideForm label,#passengerPanel #rideForm button{font-family:Inter,ui-sans-serif,system-ui,sans-serif!important}
 @media(max-width:560px){.hero{padding-top:7px!important;padding-bottom:10px!important}.hero h1{font-size:32px!important}.hero .hero-fast{font-size:12px!important}.hero .hero-negotiate{font-size:11px!important}}
+/* Respiro entre a mensagem do cabeçalho e o layout de cada aba. */
+.hero{margin-bottom:20px!important;padding-bottom:18px!important}
+.hero #heroText{margin-bottom:8px!important}
+.hero .hero-negotiate{display:block!important;margin-bottom:14px!important}
+.mode-switch{margin-bottom:18px!important}
+/* Remove a linha cinza do cartão inicial de Para onde vamos. */
+#passengerPanel:not(.passenger-map-active){border-color:transparent!important;box-shadow:none!important;background:transparent!important}
+#passengerPanel:not(.passenger-map-active) #passengerIdle{border:0!important;box-shadow:none!important}
+#passengerPanel.passenger-map-active{border-color:#292929!important;background:#101010!important;box-shadow:0 8px 28px rgba(0,0,0,.28)!important}
+#passengerPanel.passenger-map-active #passengerActive{margin-top:4px!important}
+#passengerPanel.passenger-map-active #passengerActive .ride-status{border-bottom:1px solid #292929!important;padding-bottom:14px!important}
