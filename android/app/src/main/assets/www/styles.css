@@ -422,3 +422,8 @@ body>.brand{display:none!important}
 #savedAddresses{display:none!important}
 #passengerPanel.passenger-map-active #passengerActive .actions #cancelRide{grid-column:1/-1!important;justify-self:center!important;width:150px!important;min-height:34px!important;padding:7px 10px!important;font-size:10px!important}
 #passengerPanel.passenger-map-active #passengerActive .actions #emergencyRide,#passengerPanel.passenger-map-active #passengerActive .actions #shareRide{min-height:34px!important;padding:7px 8px!important;font-size:10px!important}
+.trust-row{display:none!important}
+/* Destaque maior para a mensagem principal do topo. */
+.topbar-copy span{font-size:18px!important;letter-spacing:.1em!important;font-weight:900!important}
+.topbar-copy small{font-size:15px!important;font-weight:750!important}
+@media(max-width:560px){.topbar-copy span{font-size:12px!important;letter-spacing:.05em!important}.topbar-copy small{font-size:11px!important}}
