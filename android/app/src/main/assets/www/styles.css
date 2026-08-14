@@ -306,3 +306,18 @@ body>.brand{left:12px!important;right:auto!important;top:auto!important;bottom:1
 
 #historyPanel.home-history{width:min(590px,100%)!important;margin:10px auto!important;text-align:center!important}
 #mapPanel.idle-nearby-map{margin-left:auto!important;margin-right:auto!important}
+/* Padronização final dos formulários de passageiro e motorista. */
+.profile-panel{font-family:Inter,ui-sans-serif,system-ui,sans-serif;line-height:1.35;text-align:left;margin-left:auto!important;margin-right:auto!important}
+body.registration-open:not(.login-open) .profile-panel,body.registration-open.driver-profile-mode .profile-panel{width:min(620px,100%)!important;max-width:620px!important;padding:20px!important}
+body.login-open .profile-panel{width:min(500px,100%)!important;max-width:500px!important;padding:15px!important}
+body.registration-open .profile-panel .field{margin-bottom:11px!important}
+body.registration-open .profile-panel .field span{font-size:12px!important;margin-bottom:6px!important;line-height:1.25!important}
+body.registration-open .profile-panel .field input,body.registration-open .profile-panel .field select{height:42px!important;min-height:42px!important;padding:10px 12px!important;font-size:13px!important;border-radius:10px!important}
+body.registration-open .profile-panel .consent{font-size:11px!important;line-height:1.35!important}
+body.registration-open .profile-panel .primary{font-size:13px!important;padding:12px!important}
+body.login-open .profile-panel .field{margin-bottom:9px!important}
+body.login-open .profile-panel .field span{font-size:11px!important;margin-bottom:5px!important}
+body.login-open .profile-panel .field input{height:40px!important;min-height:40px!important;padding:9px 11px!important;font-size:13px!important}
+body.login-open .profile-panel .primary{font-size:12px!important;padding:11px!important}
+#passengerPanel,#driverPanel{margin-left:auto!important;margin-right:auto!important;font-family:Inter,ui-sans-serif,system-ui,sans-serif}
+@media(max-width:560px){body.registration-open:not(.login-open) .profile-panel,body.registration-open.driver-profile-mode .profile-panel{padding:15px!important}body.login-open .profile-panel{padding:12px!important}}
