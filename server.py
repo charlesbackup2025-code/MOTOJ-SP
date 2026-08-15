@@ -24,6 +24,8 @@ import sqlite3
 import base64
 import math
 import copy
+import smtplib
+from email.message import EmailMessage
 try:
     from pywebpush import webpush
 except ImportError:
@@ -55,6 +57,25 @@ SESSIONS = {}
 PBKDF2_ROUNDS = 180_000
 MIN_FARE = 8.0
 PER_KM = 1.50
+SMTP_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com")
+SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
+SMTP_USER = os.getenv("SMTP_USER", "")
+SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
+MAIL_FROM = os.getenv("MAIL_FROM", SMTP_USER)
+PUBLIC_APP_URL = os.getenv("PUBLIC_APP_URL", "https://motoja-sp-app.onrender.com")
+
+def send_verification_email(profile, token):
+    if not SMTP_USER or not SMTP_PASSWORD or not profile.get("email"): return False
+    link=f"{PUBLIC_APP_URL}/api/auth/verify-email?token={token}"
+    msg=EmailMessage(); msg["Subject"]="Confirme seu cadastro no MotoJá SP"; msg["From"]=MAIL_FROM; msg["To"]=profile["email"]
+    msg.set_content(f"Olá, {profile.get('name') or 'cliente'}!\n\nConfirme seu email para ativar sua conta MotoJá SP:\n{link}\n\nEste link expira em 24 horas.")
+    try:
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=12) as smtp:
+            smtp.starttls(); smtp.login(SMTP_USER, SMTP_PASSWORD); smtp.send_message(msg)
+        return True
+    except Exception:
+        return False
+
 
 def ride_price(distance, ride_type="moto", negotiated=0, dynamic_multiplier=1):
     distance=max(0.0, min(200.0, float(distance or 0)))
@@ -336,6 +357,15 @@ class Handler(SimpleHTTPRequestHandler):
                 self.path = "/index.html"
             return super().do_GET()
         query = parse_qs(parsed.query)
+        if parsed.path == "/api/auth/verify-email":
+            token = (query.get("token") or [""])[0]
+            digest = hashlib.sha256(token.encode()).hexdigest()
+            with LOCK:
+                data = read_db(); profile = next((p for p in data.get("profiles", []) if hmac.compare_digest(str(p.get("email_verify_hash", "")), digest)), None)
+                if not profile or float(profile.get("email_verify_expires", 0) or 0) < __import__("time").time():
+                    self.send_response(400); self.send_header("Content-Type", "text/html; charset=utf-8"); self.send_header("Access-Control-Allow-Origin", CORS_ORIGIN); self.end_headers(); self.wfile.write("<h2>Link inválido ou expirado</h2>".encode()); return
+                profile["email_verified"] = True; profile.pop("email_verify_hash", None); profile.pop("email_verify_expires", None); write_db(data)
+            self.send_response(200); self.send_header("Content-Type", "text/html; charset=utf-8"); self.send_header("Access-Control-Allow-Origin", CORS_ORIGIN); self.end_headers(); self.wfile.write("<h2>Email confirmado com sucesso. Você já pode entrar no MotoJá SP.</h2>".encode()); return
         with LOCK:
             data = read_db()
             if parsed.path.startswith("/api/admin/"):
@@ -517,9 +547,10 @@ class Handler(SimpleHTTPRequestHandler):
                 if email and any(str(p.get("email") or "").lower() == email for p in data["profiles"]):
                     return self.send_json({"error": "Email já cadastrado"}, 409)
                 salt = secrets.token_hex(16)
-                profile = {"id": uuid.uuid4().hex[:12], "name": name, "username": username, "phone": phone, "email": email or None, "role": role, "cpf": cpf or None, "birth_date": birth_date or None, "plate": plate or None, "background_check_status": "pending_review" if role == "driver" else "not_required", "background_check_consent_at": now() if role == "driver" and background_consent else None, "face_verification_status": "pending_review" if role == "driver" else "not_required", "face_consent_at": now() if role == "driver" and face_consent else None, "verification_status": "pending" if role == "driver" else "not_required", "account_status": "active", "reports_count": 0, "pin_salt": salt, "pin_hash": make_pin_hash(pin, salt), "created_at": now()}
-                data["profiles"].append(profile); write_db(data)
-                return self.send_json({"token": token_for(profile["id"]), "profile": public_profile(profile)}, 201)
+                profile = {"id": uuid.uuid4().hex[:12], "name": name, "username": username, "phone": phone, "email": email or None, "role": role, "cpf": cpf or None, "birth_date": birth_date or None, "plate": plate or None, "background_check_status": "pending_review" if role == "driver" else "not_required", "background_check_consent_at": now() if role == "driver" and background_consent else None, "face_verification_status": "pending_review" if role == "driver" else "not_required", "face_consent_at": now() if role == "driver" and face_consent else None, "verification_status": "pending" if role == "driver" else "not_required", "account_status": "active", "reports_count": 0, "pin_salt": salt, "pin_hash": make_pin_hash(pin, salt), "email_verified": False, "created_at": now()}
+                verification_token=secrets.token_urlsafe(32); profile["email_verify_hash"]=hashlib.sha256(verification_token.encode()).hexdigest(); profile["email_verify_expires"]=__import__("time").time()+86400
+                data["profiles"].append(profile); write_db(data); sent=send_verification_email(profile, verification_token)
+                return self.send_json({"token": token_for(profile["id"]), "profile": public_profile(profile), "email_verification_sent": sent}, 201)
             if parsed.path == "/api/auth/login":
                 username = re.sub(r"[^a-zA-Z0-9._-]", "", str(payload.get("username", "")).strip().lower())
                 phone, pin = str(payload.get("phone", "")).strip(), str(payload.get("password", payload.get("pin", ""))).strip()
