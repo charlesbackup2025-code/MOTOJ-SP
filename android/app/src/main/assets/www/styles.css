@@ -435,3 +435,6 @@ button[disabled]{cursor:wait!important;filter:none!important;transform:none!impo
 /* Carregamento e toque mais rápidos em celulares. */
 html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
 button{touch-action:manipulation}
+/* Cancelamento com destaque e área de toque maior. */
+#passengerPanel.passenger-map-active #passengerActive .actions #cancelRide{width:min(280px,100%)!important;min-height:58px!important;padding:15px 22px!important;font-size:15px!important;font-weight:900!important;letter-spacing:.02em!important;border:2px solid #fff!important}
+@media(max-width:560px){#passengerPanel.passenger-map-active #passengerActive .actions #cancelRide{width:100%!important;min-height:56px!important;font-size:14px!important}}
