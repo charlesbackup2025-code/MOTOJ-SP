@@ -514,6 +514,8 @@ class Handler(SimpleHTTPRequestHandler):
                     return self.send_json({"error": "Nome de usuário já cadastrado"}, 409)
                 if any(p.get("phone") == phone for p in data["profiles"]):
                     return self.send_json({"error": "Celular já cadastrado"}, 409)
+                if email and any(str(p.get("email") or "").lower() == email for p in data["profiles"]):
+                    return self.send_json({"error": "Email já cadastrado"}, 409)
                 salt = secrets.token_hex(16)
                 profile = {"id": uuid.uuid4().hex[:12], "name": name, "username": username, "phone": phone, "email": email or None, "role": role, "cpf": cpf or None, "birth_date": birth_date or None, "plate": plate or None, "background_check_status": "pending_review" if role == "driver" else "not_required", "background_check_consent_at": now() if role == "driver" and background_consent else None, "face_verification_status": "pending_review" if role == "driver" else "not_required", "face_consent_at": now() if role == "driver" and face_consent else None, "verification_status": "pending" if role == "driver" else "not_required", "account_status": "active", "reports_count": 0, "pin_salt": salt, "pin_hash": make_pin_hash(pin, salt), "created_at": now()}
                 data["profiles"].append(profile); write_db(data)
@@ -521,9 +523,11 @@ class Handler(SimpleHTTPRequestHandler):
             if parsed.path == "/api/auth/login":
                 username = re.sub(r"[^a-zA-Z0-9._-]", "", str(payload.get("username", "")).strip().lower())
                 phone, pin = str(payload.get("phone", "")).strip(), str(payload.get("password", payload.get("pin", ""))).strip()
-                profile = next((p for p in data["profiles"] if (username and str(p.get("username", "")).lower() == username) or (phone and p.get("phone") == phone)), None)
+                identifier = username
+                email_identifier = identifier if re.fullmatch(r'[^@\s]+@[^@\s]+\.[^@\s]+', identifier) else ''
+                profile = next((p for p in data["profiles"] if (username and str(p.get("username", "")).lower() == username) or (phone and p.get("phone") == phone) or (email_identifier and str(p.get("email", "")).lower() == email_identifier)), None)
                 if not profile or not valid_password(pin) or not hmac.compare_digest(profile.get("pin_hash", ""), make_pin_hash(pin, profile.get("pin_salt", ""))):
-                    return self.send_json({"error": "Celular ou senha inválida"}, 401)
+                    return self.send_json({"error": "Usuário, email, celular ou senha inválida"}, 401)
                 profile.setdefault("verification_status", "not_required" if profile.get("role") != "driver" else "pending")
                 return self.send_json({"token": token_for(profile["id"]), "profile": public_profile(profile)})
             if parsed.path == "/api/auth/logout":
