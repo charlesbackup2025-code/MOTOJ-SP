@@ -443,3 +443,6 @@ body:not(.driver-profile-mode) #profileCpfField{display:none!important}
 body.driver-profile-mode #profileCpfField{display:block!important}
 .profile-panel input:invalid:not(:placeholder-shown){border-color:#b00020}
 .profile-panel input:valid:not(:placeholder-shown){border-color:#333}
+/* Ajuste final do botão de cancelamento. */
+#passengerPanel.passenger-map-active #passengerActive .actions #cancelRide{width:220px!important;min-height:44px!important;padding:10px 16px!important;font-size:12px!important;border:0!important}
+@media(max-width:560px){#passengerPanel.passenger-map-active #passengerActive .actions #cancelRide{width:min(220px,100%)!important;min-height:44px!important;font-size:12px!important}}
