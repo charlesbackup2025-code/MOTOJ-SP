@@ -438,3 +438,8 @@ button{touch-action:manipulation}
 /* Cancelamento com destaque e área de toque maior. */
 #passengerPanel.passenger-map-active #passengerActive .actions #cancelRide{width:min(280px,100%)!important;min-height:58px!important;padding:15px 22px!important;font-size:15px!important;font-weight:900!important;letter-spacing:.02em!important;border:2px solid #fff!important}
 @media(max-width:560px){#passengerPanel.passenger-map-active #passengerActive .actions #cancelRide{width:100%!important;min-height:56px!important;font-size:14px!important}}
+/* Campos específicos aparecem somente no perfil correspondente. */
+body:not(.driver-profile-mode) #profileCpfField{display:none!important}
+body.driver-profile-mode #profileCpfField{display:block!important}
+.profile-panel input:invalid:not(:placeholder-shown){border-color:#b00020}
+.profile-panel input:valid:not(:placeholder-shown){border-color:#333}
