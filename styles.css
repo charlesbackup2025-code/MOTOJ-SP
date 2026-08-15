@@ -432,3 +432,6 @@ body>.brand{display:none!important}
 .ride-option:focus-visible,.primary:focus-visible,.secondary:focus-visible,.input-action button:focus-visible{outline:3px solid #fff!important;outline-offset:2px!important}
 button[disabled]{cursor:wait!important;filter:none!important;transform:none!important}
 .toast{will-change:transform,opacity}
+/* Carregamento e toque mais rápidos em celulares. */
+html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
+button{touch-action:manipulation}
