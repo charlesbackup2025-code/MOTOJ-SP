@@ -9,8 +9,10 @@
   <link rel="icon" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="preconnect" href="https://router.project-osrm.org">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <title>MotoJá SP</title>
 </head>
 <body>
@@ -42,7 +44,7 @@
     <section id="driverPanel" class="panel hidden" role="tabpanel"><div class="driver-head"><div><p class="eyebrow">ÁREA DO MOTOCICLISTA</p><h2 id="driverGreeting">Olá, parceiro!</h2></div><div class="driver-head-actions"><button id="passengerModeBtn" class="secondary" type="button">← Passageiro</button><button id="onlineToggle" class="status-toggle"><i></i><span>Ficar online</span></button></div><div id="driverOffline" class="empty-state"><div class="empty-icon">🛵</div><h3>Você está offline</h3><p>Fique online para receber solicitações de corrida próximas.</p></div><div id="driverOnline" class="hidden"></div></section>
     <section id="ratingPanel" class="panel rating-panel hidden"><div class="section-heading"><div><span class="step">★</span><h2>Como foi a corrida?</h2></div><span class="badge">Avalie</span></div><p class="map-caption" id="ratingRideText">Sua avaliação ajuda a manter a qualidade do serviço.</p><div class="rating-buttons"><button type="button" class="rating-btn" data-rating="1">★</button><button type="button" class="rating-btn" data-rating="2">★</button><button type="button" class="rating-btn" data-rating="3">★</button><button type="button" class="rating-btn" data-rating="4">★</button><button type="button" class="rating-btn" data-rating="5">★</button></div><button id="sendRating" class="primary" type="button">Enviar avaliação <span>→</span></button><button id="reportBtn" class="notice-btn" type="button">⚠️ Relatar um problema</button><div id="reportBox" class="hidden"><label class="field"><span>O que aconteceu?</span><textarea id="reportReason" rows="3" placeholder="Descreva o problema"></textarea></label><button id="sendReport" class="secondary danger" type="button">Enviar relato</button></div></section>
     <section id="historyPanel" class="panel history-panel hidden"><div class="section-heading"><div><span class="step">↺</span><h2>Suas viagens</h2></div><span class="badge" id="historyCount">0 viagens</span></div><div id="historyList"></div></section><section id="mapPanel" class="panel map-panel hidden" aria-label="Trajeto da corrida"><div class="section-heading"><div><span class="step">⌖</span><h2 id="mapTitle">Trajeto da corrida</h2></div><span class="badge" id="mapStatus">Aguardando</span></div><div id="map"></div><p id="mapCaption" class="map-caption">Informe embarque e destino para visualizar o trajeto.</p></section>
-    <section class="trust-row"><div>🛡️ <span>Motoristas verificados</span></div><div>🔒 <span>Viagens protegidas</span></div><div>⭐ <span>Avaliação após a corrida</span></div></section>
+    
   </main>
   <button id="accessibilityVoiceBtn" class="accessibility-voice-btn" type="button" aria-label="Ativar microfone e comandos de voz" title="Ativar microfone e comandos de voz">🎙️</button><div id="toast" class="toast" role="status" aria-live="polite"></div><script src="app.js"></script>
 </body>
