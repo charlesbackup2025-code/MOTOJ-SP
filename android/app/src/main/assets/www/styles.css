@@ -467,3 +467,4 @@ body.logged-in .hero p:not(.eyebrow){font-size:14px!important;color:#aaa!importa
 @media(max-width:560px){.accessibility-voice-btn{right:16px!important;bottom:78px!important;width:44px!important;height:44px!important;font-size:21px!important}}
 /* Configuração não fica mais no canto superior direito. */
 .left-header-tools .account-menu-btn{display:none!important}
+#boardingField>span.field-label-row>span,#destinationField>span{font-size:14px!important;font-weight:900!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#fff!important}
