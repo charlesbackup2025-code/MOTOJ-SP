@@ -468,3 +468,9 @@ body.logged-in .hero p:not(.eyebrow){font-size:14px!important;color:#aaa!importa
 /* Configuração não fica mais no canto superior direito. */
 .left-header-tools .account-menu-btn{display:none!important}
 #boardingField>span.field-label-row>span,#destinationField>span{font-size:14px!important;font-weight:900!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#fff!important}
+/* Campo de endereço começa imediatamente após os dois-pontos. */
+#boardingField,#destinationField{display:grid!important;grid-template-columns:max-content minmax(0,1fr)!important;align-items:center!important;column-gap:9px!important}
+#boardingField>.field-label-row,#destinationField>span{grid-column:1!important;grid-row:1!important;margin:0!important;white-space:nowrap!important}
+#boardingField>.input-action,#destinationField>input{grid-column:2!important;grid-row:1!important;min-width:0!important}
+#boardingField .input-action input,#destinationField input{height:44px!important}
+@media(max-width:420px){#boardingField,#destinationField{column-gap:6px!important}#boardingField>span.field-label-row>span,#destinationField>span{font-size:12px!important}}
