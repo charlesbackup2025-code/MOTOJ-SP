@@ -457,13 +457,3 @@ body.logged-in{background:#050505}body.logged-in .app-shell{max-width:640px;padd
 @media(min-width:700px){body.logged-in .bottom-nav{width:420px}}
 /* Tipografia e hierarquia alinhadas ao novo projeto visual. */
 body.logged-in .hero p:not(.eyebrow){font-size:14px!important;color:#aaa!important}body.logged-in .eyebrow{font-size:10px!important;letter-spacing:.16em!important}body.logged-in .section-heading h2{font-size:18px!important}
-/* Configuração dentro da aba, sem botão preso ao topo global. */
-#passengerPanel{position:relative!important;padding-top:54px!important}
-.passenger-settings-host{position:absolute;top:10px;right:14px;z-index:12;display:flex;justify-content:flex-end}
-.passenger-settings-host .account-menu-btn{position:static!important;min-height:38px!important;padding:7px 10px!important;border-radius:10px!important}
-.passenger-settings-host .account-menu-btn>span:last-child{display:inline!important;font-size:10px!important}
-.passenger-settings-host .account-menu{position:absolute!important;top:44px!important;right:0!important;left:auto!important;width:235px!important}
-body.registration-open .passenger-settings-host{display:none!important}
-#passengerPanel #passengerIdle,#passengerPanel #passengerActive{width:100%!important}
-#passengerPanel #rideForm>.primary{margin-top:6px!important;min-height:48px!important}
-@media(max-width:560px){.passenger-settings-host{right:10px}.passenger-settings-host .account-menu-btn>span:last-child{display:none!important}.passenger-settings-host .account-menu{right:-4px!important;width:min(235px,calc(100vw - 30px))!important}}
