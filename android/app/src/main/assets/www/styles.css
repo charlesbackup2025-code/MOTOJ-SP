@@ -465,3 +465,5 @@ body.logged-in .hero p:not(.eyebrow){font-size:14px!important;color:#aaa!importa
 /* Microfone no canto inferior direito, acima de Perfil. */
 .accessibility-voice-btn{right:max(16px,calc((100% - 560px)/2 + 14px))!important;top:auto!important;bottom:78px!important;width:46px!important;height:46px!important;font-size:22px!important;border:1px solid #333!important;z-index:21!important}
 @media(max-width:560px){.accessibility-voice-btn{right:16px!important;bottom:78px!important;width:44px!important;height:44px!important;font-size:21px!important}}
+/* Configuração não fica mais no canto superior direito. */
+.left-header-tools .account-menu-btn{display:none!important}
