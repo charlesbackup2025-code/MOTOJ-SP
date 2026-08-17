@@ -30,3 +30,4 @@
 .quick-destinations.hidden{display:none!important}.search-box{margin:8px 0 12px;position:relative;z-index:2}.search-box:not(.hidden)+.demo-map{margin-top:0}
 .active-card>.cancel-top{display:block;width:100%;margin:13px 0 8px;order:5}.active-card>.ride-actions{order:6}.active-card{display:flex;flex-direction:column}.active-card>.offer-row,.active-card>.current-ride,.active-card>.driver-card{order:1}
 #activeRide>.cancel-top{display:block;width:100%;margin:10px 0 8px;box-sizing:border-box}.active-card>.cancel-top{margin:0}.active-card{padding-bottom:14px}.ride-actions{margin-top:0}
+.search-box:before{display:none}.search-title{display:flex;align-items:center;justify-content:space-between;margin:0 0 10px;font-size:13px;font-weight:900}.search-title button{width:30px;height:30px;padding:0;border:1px solid #111;border-radius:50%;background:#fff;color:#111;font-size:18px;line-height:1;cursor:pointer}.search-title button:active{background:#111;color:#fff}
