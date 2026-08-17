@@ -35,3 +35,4 @@
 .phone-app{position:relative;overflow:hidden}.bottom-nav{position:absolute!important;left:50%!important;right:auto!important;bottom:12px!important;transform:translateX(-50%)!important;width:calc(100% - 28px)!important;max-width:none!important;z-index:50!important}
 /* Cancelamento no topo do estado de busca, como no demonstrativo. */
 .active-card>.cancel-top{display:block;width:100%;margin:0 0 12px;order:0;border:0;border-radius:9px;background:#080808;color:#fff;padding:12px;font-size:11px;font-weight:950}.active-card>.offer-row{order:1}.active-card>.current-ride,.active-card>.driver-card{order:2}.active-card{display:flex;flex-direction:column}.active-card>.ride-actions{order:3;margin-top:12px}
+.bottom-nav{gap:2px;padding:6px;border-radius:14px}.bottom-nav a{gap:0;line-height:1.05;font-size:17px}.bottom-nav a small{margin-top:1px;font-size:8px;letter-spacing:.02em}
