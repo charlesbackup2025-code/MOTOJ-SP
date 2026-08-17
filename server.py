@@ -670,6 +670,14 @@ class Handler(SimpleHTTPRequestHandler):
 
 
 if __name__ == "__main__":
+    if os.getenv("RESET_DATABASE", "").lower() == "true":
+        for target in (SQLITE_FILE, DB):
+            try:
+                if target.exists(): target.unlink()
+            except OSError: pass
+        try:
+            import shutil; shutil.rmtree(UPLOAD_DIR, ignore_errors=True)
+        except OSError: pass
     init_storage()
     port = int(os.getenv("PORT", "8080"))
     print(f"MotoJá SP em http://localhost:{port}")
