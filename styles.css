@@ -15,3 +15,7 @@
 .phone-app>.home-screen{border:6px solid #000!important;border-radius:30px!important;box-shadow:0 16px 38px #0004!important;overflow:hidden!important;margin:24px auto 34px!important;max-width:590px!important;background:#fff!important}
 .phone-app:before{display:none!important}
 @media(max-width:560px){.phone-app>.home-screen{border-width:5px!important;border-radius:24px!important;margin:12px 8px 26px!important}}
+/* Medidas do simulador e navegação fixa, sem deslocar o conteúdo. */
+.phone-app>.home-screen{max-width:410px!important;min-height:760px!important}
+.phone-app>.home-screen .bottom-nav{position:fixed!important;left:50%!important;right:auto!important;bottom:14px!important;transform:translateX(-50%)!important;width:min(382px,calc(100vw - 24px))!important;margin:0!important;z-index:50!important}
+@media(max-width:560px){.phone-app>.home-screen{max-width:none!important;min-height:690px!important;margin-left:8px!important;margin-right:8px!important}.phone-app>.home-screen .bottom-nav{bottom:10px!important;width:calc(100vw - 28px)!important}}
