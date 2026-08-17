@@ -1,3 +1,4 @@
+if(localStorage.getItem('motoja-data-reset-v1')!=='done'){try{localStorage.clear();indexedDB.deleteDatabase('motoja-secure-storage');}catch(_){ }localStorage.setItem('motoja-data-reset-v1','done');}
 const $ = (s) => document.querySelector(s);
 let state = (()=>{try{return JSON.parse(localStorage.getItem('motoja-state')||'{}')}catch(_){return {}}})();
 state.history = Array.isArray(state.history) ? state.history : [];
