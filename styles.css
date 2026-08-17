@@ -33,3 +33,5 @@
 .search-box:before{display:none}.search-title{display:flex;align-items:center;justify-content:space-between;margin:0 0 10px;font-size:13px;font-weight:900}.search-title button{width:30px;height:30px;padding:0;border:1px solid #111;border-radius:50%;background:#fff;color:#111;font-size:18px;line-height:1;cursor:pointer}.search-title button:active{background:#111;color:#fff}
 /* Navegação permanece dentro da moldura do celular, na aba final. */
 .phone-app{position:relative;overflow:hidden}.bottom-nav{position:absolute!important;left:50%!important;right:auto!important;bottom:12px!important;transform:translateX(-50%)!important;width:calc(100% - 28px)!important;max-width:none!important;z-index:50!important}
+/* Cancelamento no topo do estado de busca, como no demonstrativo. */
+.active-card>.cancel-top{display:block;width:100%;margin:0 0 12px;order:0;border:0;border-radius:9px;background:#080808;color:#fff;padding:12px;font-size:11px;font-weight:950}.active-card>.offer-row{order:1}.active-card>.current-ride,.active-card>.driver-card{order:2}.active-card{display:flex;flex-direction:column}.active-card>.ride-actions{order:3;margin-top:12px}
