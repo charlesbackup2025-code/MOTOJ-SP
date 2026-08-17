@@ -28,3 +28,4 @@
 .search-trigger small{display:none}.search-box{margin:10px 0 12px}.search-box.hidden{display:none!important}
 .current-ride>span:nth-child(2){display:flex;align-items:baseline;gap:7px;min-width:0;white-space:nowrap}.current-ride>span:nth-child(2) b{font-size:10px;white-space:nowrap}.current-ride>span:nth-child(2) small{margin:0;font-size:10px;white-space:nowrap}.current-ride{display:flex;align-items:center;gap:8px;overflow:hidden}
 .quick-destinations.hidden{display:none!important}.search-box{margin:8px 0 12px;position:relative;z-index:2}.search-box:not(.hidden)+.demo-map{margin-top:0}
+.active-card>.cancel-top{display:block;width:100%;margin:13px 0 8px;order:5}.active-card>.ride-actions{order:6}.active-card{display:flex;flex-direction:column}.active-card>.offer-row,.active-card>.current-ride,.active-card>.driver-card{order:1}
