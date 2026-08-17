@@ -1,14 +1,22 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#ffffff">
-  <meta name="description" content="MotoJá SP">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="icon-192.png">
-  <link rel="stylesheet" href="styles.css">
-  <title>MotoJá SP</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#fff"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="stylesheet" href="styles.css"><title>MOTOJASP — mobilidade urbana</title>
 </head>
-<body></body>
-</html>
+<body>
+<header class="site-header"><a class="brand" href="#inicio"><b>MJ</b><strong>MOTOJASP</strong></a><a class="demo-link" href="#buscar">Aplicativo demonstrativo</a></header>
+<main id="inicio" class="phone-app">
+<section class="home-screen" id="buscar"><div class="hello"><span>Olá, Thanos</span><button class="avatar" id="profileBtn">T</button></div>
+<button class="search-trigger" id="searchTrigger"><span>⌕</span><strong>Para onde você vai?</strong><small>Digite o endereço de embarque<br>Digite o endereço de destino</small></button>
+<div class="quick-destinations"><button data-destination="Centro">Centro</button><button data-destination="Paulista">Paulista</button></div>
+<div id="searchBox" class="search-box hidden"><label>EMBARQUE:<input id="origin" placeholder="Digite o endereço de embarque"></label><label>DESTINO:<input id="destination" placeholder="Digite o endereço de destino"></label><button id="useGps" class="outline">Usar minha localização</button></div>
+<div id="rideChooser"><div class="section-label">MODALIDADES</div><div class="ride-options">
+<button class="ride-option active" data-type="moto"><span class="ride-icon">🏍️</span><span><b>MOTO</b><small>Chega em 3 min · 1 passageiro</small></span><strong>R$ 8,00<small>estimado</small></strong></button>
+<button class="ride-option" data-type="motoX"><span class="ride-icon">🏍️</span><span><b>MOTO X</b><small>Chega em 4 min · mínimo 1–2 km</small></span><strong>R$ 12,00<small>estimado</small></strong></button>
+<button class="ride-option" data-type="negotiate"><span class="ride-icon">🏍️</span><span><b>MOTO NEGOCIA</b><small>Mínimo 1–3 km · + R$ 2,50/km adicional</small></span><strong>R$ 18,00<small>base</small></strong></button>
+<button class="ride-option" data-type="delivery"><span class="ride-icon">🛵</span><span><b>ENTREGA MOTO</b><small>+ R$ 2,00 por km adicional</small></span><strong>R$ 8,00<small>base estimada</small></strong></button></div><button id="requestRide" class="request-btn">Buscar corrida</button></div>
+<div id="activeRide" class="hidden"></div><nav class="bottom-nav"><a class="active" href="#inicio">⌂<small>INÍCIO</small></a><a href="#carteira">◈<small>CARTEIRA</small></a><a href="#perfil">?<small>AJUDA</small></a></nav></section>
+<section id="carteira" class="wallet section"><h2>Carteira <span>MOTOJASP.</span></h2><p>Adicione saldo e gerencie seus cartões para pagar as corridas com praticidade.</p><div class="balance"><small>Saldo disponível</small><strong>R$ 86,30</strong><button id="addBalance">+ Adicionar saldo</button></div><h3>Formas de pagamento</h3><div class="payment-row">◉ Cartão final 4242 <small>Principal</small><b>⋮</b></div><div class="payment-row">◉ Cartão final 1088 <small>Visa</small><b>⋮</b></div><button class="add-card">+ Adicionar cartão</button></section>
+<section class="section features"><h2>Uma corrida <span>mais simples.</span></h2><p>Do pedido ao destino, tudo foi pensado para você acompanhar cada etapa sem perder tempo.</p><div class="feature-grid"><article>⌖<h3>Acompanhe em tempo real</h3><p>Veja a chegada do motociclista e o caminho até o destino em uma tela limpa.</p></article><article>◈<h3>Preço antes de sair</h3><p>Clareza sobre o valor estimado antes de confirmar.</p></article><article>✓<h3>Segurança em primeiro lugar</h3><p>Dados da viagem e suporte sempre à mão.</p></article></div></section>
+<section id="perfil" class="section profile"><h2>Feito para <span>facilitar.</span></h2><p>Preferências, ajuda e dados da sua conta reunidos em um só lugar.</p><div class="feature-grid"><article>◉<h3>Seu perfil</h3><p>Nome, foto, avaliações e configurações de segurança organizados.</p></article><article>?<h3>Ajuda 24 horas</h3><p>Encontre respostas rápidas e fale com o suporte.</p></article><article>♢<h3>Mais possibilidades</h3><p>Escolha a opção de mobilidade ideal para seu momento.</p></article></div></section>
+</main><div id="toast" class="toast"></div><script src="app.js"></script></body></html>
