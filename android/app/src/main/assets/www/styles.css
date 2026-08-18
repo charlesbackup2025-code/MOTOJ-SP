@@ -42,3 +42,5 @@
 #activeRide>.ride-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0 0;padding:0;border:0;background:transparent}
 /* Cancelamento compacto, centralizado abaixo das ações. */
 #activeRide>.cancel-top{width:58%;margin:8px auto 0;padding:9px 10px;font-size:10px;border-radius:8px;text-align:center}.bottom-nav{bottom:10px!important}
+/* A navegação fica presa à moldura interna do celular, não à página. */
+.phone-app>.home-screen{position:relative!important;overflow:hidden!important}.phone-app>.home-screen>.bottom-nav{position:absolute!important;left:50%!important;bottom:10px!important;transform:translateX(-50%)!important;width:calc(100% - 28px)!important}
