@@ -46,3 +46,4 @@
 .phone-app>.home-screen{position:relative!important;overflow:hidden!important}.phone-app>.home-screen>.bottom-nav{position:absolute!important;left:50%!important;bottom:10px!important;transform:translateX(-50%)!important;width:calc(100% - 28px)!important}
 /* Ajuste compacto para o estado de preenchimento dentro do celular. */
 .search-box{padding:10px 11px 9px;margin:7px 0 10px}.search-title{margin-bottom:7px;font-size:12px}.search-box label{grid-template-columns:74px 1fr;gap:6px;margin:5px 0;font-size:9px}.search-box input{height:31px!important;padding:6px 8px!important;border-radius:8px;font-size:11px}.search-box:not(.hidden)+.demo-map{height:168px;margin-bottom:12px}.search-box:not(.hidden)+.demo-map .map-label{font-size:9px}
+.search-box input:read-only{background:#f7f7f7;color:#333}
