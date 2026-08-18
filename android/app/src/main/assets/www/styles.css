@@ -47,3 +47,4 @@
 /* Ajuste compacto para o estado de preenchimento dentro do celular. */
 .search-box{padding:10px 11px 9px;margin:7px 0 10px}.search-title{margin-bottom:7px;font-size:12px}.search-box label{grid-template-columns:74px 1fr;gap:6px;margin:5px 0;font-size:9px}.search-box input{height:31px!important;padding:6px 8px!important;border-radius:8px;font-size:11px}.search-box:not(.hidden)+.demo-map{height:168px;margin-bottom:12px}.search-box:not(.hidden)+.demo-map .map-label{font-size:9px}
 .search-box input:read-only{background:#f7f7f7;color:#333}
+.demo-map{cursor:crosshair;touch-action:manipulation}.demo-map:after{content:'+';position:absolute;left:var(--tap-x,50%);top:var(--tap-y,50%);transform:translate(-50%,-50%) scale(0);width:22px;height:22px;border:2px solid #111;border-radius:50%;background:#fff;color:#111;text-align:center;line-height:18px;font-weight:900;transition:transform .15s}.demo-map.map-selected:after{transform:translate(-50%,-50%) scale(1)}
