@@ -38,3 +38,5 @@
 .bottom-nav{gap:2px;padding:6px;border-radius:14px}.bottom-nav a{gap:0;line-height:1.05;font-size:17px}.bottom-nav a small{margin-top:1px;font-size:8px;letter-spacing:.02em}
 /* Ações no final: SOS/compartilhar primeiro e cancelar abaixo. */
 .active-card>.cancel-top{display:none!important}#activeRide>.cancel-top{display:block;width:100%;margin:8px 0 0;box-sizing:border-box;border:0;border-radius:9px;background:#080808;color:#fff;padding:12px;font-size:11px;font-weight:950}.active-card>.ride-actions{margin-top:12px}
+/* SOS e compartilhar ficam fora do cartão do motorista. */
+#activeRide>.ride-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0 0;padding:0;border:0;background:transparent}
