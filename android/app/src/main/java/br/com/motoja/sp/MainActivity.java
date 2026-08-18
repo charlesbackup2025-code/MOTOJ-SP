@@ -11,12 +11,16 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.WebStorage;
 
 public class MainActivity extends Activity {
     private WebView webView;
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         webView = new WebView(this);
+        webView.clearCache(true);
+        webView.clearHistory();
+        WebStorage.getInstance().deleteAllData();
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true); settings.setDomStorageEnabled(true); settings.setDatabaseEnabled(true); settings.setGeolocationEnabled(true);
         webView.setWebViewClient(new WebViewClient() {
